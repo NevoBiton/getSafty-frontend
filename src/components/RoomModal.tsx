@@ -31,17 +31,12 @@ const RoomPage: React.FC = () => {
 
   const { loggedInUser, favRooms, setFavRooms } = authContext;
 
-  function getFavStatus(owner: User) {
-    console.log(favRooms);
-
-    favRooms?.forEach((favId) => {
-      if (favId.toString() === id) {
-        console.log(true);
-
+  function getFavStatus() {
+    favRooms?.forEach((fav: IRoom) => {
+      if (fav._id === id) {
         setFavState(true);
         return;
       }
-      console.log(false);
     });
   }
 
@@ -50,7 +45,7 @@ const RoomPage: React.FC = () => {
       const { data } = await api.get(`/room/${id}`);
       setRoom(data.room);
       if (loggedInUser) {
-        getFavStatus(loggedInUser);
+        getFavStatus();
         if (loggedInUser.phoneNumber.startsWith("0")) {
           setFormatedNumber("972" + loggedInUser.phoneNumber.slice(1));
         } else {
@@ -98,9 +93,6 @@ const RoomPage: React.FC = () => {
             (favId) => favId.toString() !== id
           );
         }
-
-        console.log(updatedFavorites);
-
         // Update the owner state with the new favorites array
         setFavRooms(updatedFavorites);
       }

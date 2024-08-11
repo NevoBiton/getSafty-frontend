@@ -24,11 +24,12 @@ function FavoritesPage() {
     return <div>Error: AuthContext is not available.</div>;
   }
 
-  const { loggedInUser, favRooms } = authContext;
+  const { loggedInUser, favRooms, setFavRooms } = authContext;
 
   if (!loggedInUser) {
     return null; // Redirect handled in useEffect
   }
+  console.log(favRooms);
 
   return (
     <div className="w-[100dvw] h-[88dvh] p-6 bg-gray-100">
@@ -44,8 +45,8 @@ function FavoritesPage() {
           {favRooms && favRooms.length > 1 ? (
             <Carousel>
               <CarouselContent>
-                {favRooms.map((room) => (
-                  <CarouselItem key={room._id}>
+                {favRooms.map((room, index) => (
+                  <CarouselItem key={room._id + "" + index}>
                     <SmallShelter room={room} />
                   </CarouselItem>
                 ))}

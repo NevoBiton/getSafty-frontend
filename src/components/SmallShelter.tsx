@@ -24,7 +24,7 @@ function SmallShelter({ room }: RoomProps) {
       </CardHeader>
       <CardContent>
         <ul>
-          <li>{room.address.street}</li>
+          <li>{room?.address?.street}</li>
         </ul>
       </CardContent>
     </Card>
