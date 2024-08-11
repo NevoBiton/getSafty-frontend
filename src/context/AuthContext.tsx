@@ -1,4 +1,5 @@
 import { toast } from "@/components/ui/use-toast";
+import { formatJWTTokenToUser } from "@/lib/utils";
 import api from "@/services/api.services";
 import { createContext, useEffect, useState, ReactNode } from "react";
 
@@ -35,6 +36,11 @@ interface User {
   createdAt?: string;
 }
 
+export interface IUserLoginData {
+  email: FormDataEntryValue | null;
+  password: FormDataEntryValue | null;
+}
+
 interface AuthContextProps {
   loggedInUser: User | null;
   login: (token: string) => Promise<void>;
@@ -63,7 +69,8 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     const token = localStorage.getItem("token");
     if (token) {
       try {
-        const { data } = await api.get("/users");
+        const userId = formatJWTTokenToUser(token);
+        const { data } = await api.get(`/auth/${userId}`);
         setLoggedInUser({
           userId: data._id,
           firstName: data.firstName,
@@ -85,7 +92,9 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   const login = async (token: string) => {
     localStorage.setItem("token", token);
     try {
-      const { data } = await api.get("/users");
+      const { userId }: any = formatJWTTokenToUser(token);
+      const { data } = await api.get(`/auth/${userId}`);
+
       setLoggedInUser({
         userId: data._id,
         firstName: data.firstName,
@@ -102,7 +111,10 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         description: `${data.firstName} ${data.lastName}`,
       });
     } catch (error) {
-      console.error("Error logging in:", error);
+      toast({
+        title: "Failed to Login",
+        description: "Please check your credentials and try again.",
+      });
     }
   };
 
