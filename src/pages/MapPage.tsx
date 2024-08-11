@@ -10,7 +10,7 @@ import AddRoomDialog from "@/components/AddRoomDialog";
 import { AuthContext, IRoom } from "@/context/AuthContext";
 import ColorMap from "@/components/ColorMap";
 import FilterBtn from "@/components/FilterBtn";
-import { useSearchParams } from "react-router-dom";
+import { Outlet, useNavigate, useSearchParams } from "react-router-dom";
 import api from "@/services/api.services";
 import Loader from "@/components/ui/Loader";
 import RoomModal from "@/components/RoomModal";
@@ -59,7 +59,7 @@ function MapPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams(); // Get and set search params
   const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null); // Ref for the autocomplete input
-
+  const nav = useNavigate();
   // Function to fetch shelters based on location and search parameters
   const getShelters = useCallback(
     async (loc: Location) => {
@@ -264,7 +264,7 @@ function MapPage() {
           {shelters.map((shelter: IRoom, index) =>
             shelter.location ? (
               <MarkerF
-                key={`${shelter.roomId}${index}`}
+                key={`${shelter._id}${index}`}
                 position={{
                   lat: shelter.location.lat,
                   lng: shelter.location.lng,
@@ -274,7 +274,7 @@ function MapPage() {
                   scaledSize: new google.maps.Size(25, 25),
                 }}
                 onClick={() => {
-                  handleMarkerClick(shelter);
+                  nav(`/map/${shelter._id}`);
                 }}
               />
             ) : null
@@ -287,16 +287,11 @@ function MapPage() {
             isOpen={isDialogOpen}
             onClose={() => setIsDialogOpen(false)}
           />
-          <RoomModal
-            isOpen={roomModalOpen}
-            onClose={() => setRoomModalOpen(false)}
-            room={selectedRoom!}
-          />
         </GoogleMap>
-
       ) : (
         <Loader />
       )}
+      <Outlet />
     </div>
   );
 }

@@ -6,6 +6,7 @@ import RegisterPage from "./pages/RegisterPage";
 import InstructionsPage from "./pages/InstructionsPage";
 import MyProfile from "./pages/MyProfile";
 import MainLayout from "./context/MainLayout";
+import RoomModal from "./components/RoomModal";
 
 function App() {
   return (
@@ -13,11 +14,12 @@ function App() {
       <Routes>
         <Route path="/" element={<MainLayout />}>
           <Route index element={<LandingPage />} />
-          <Route path="map" element={<MapPage />} />
+          <Route path="map" element={<MapPage />}>
+            <Route path=":id" element={<RoomModal />} />
+          </Route>
           <Route path="instructions" element={<InstructionsPage />} />
           <Route path="myProfile" element={<MyProfile />} />
         </Route>
-
         <Route path="/" element={<Outlet />}>
           <Route path="login" element={<LoginPage />} />
           <Route path="register" element={<RegisterPage />} />
