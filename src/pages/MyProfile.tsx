@@ -14,12 +14,7 @@ function MyProfile() {
   }
 
   const { loggedInUser } = authContext;
-  function getRooms() {
-    if (loggedInUser) {
-      const response = api.get(`/room/user/${loggedInUser._id}`);
-      console.log(response);
-    }
-  }
+
   if (!loggedInUser) {
     return <div>Please log in to view your profile.</div>;
   }
