@@ -1,9 +1,12 @@
-import React, { useEffect, useState, useCallback, useMemo } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { GoogleMap, MarkerF, useJsApiLoader } from "@react-google-maps/api";
 import MyLocationBtn from "../components/MyLocationBtn";
 import axios from "axios";
 import { IRoom } from "@/context/AuthContext";
 import ColorMap from "@/components/ColorMap";
+import FilterBtn from "@/components/FilterBtn";
+import { useSearchParams } from "react-router-dom";
+import api from "@/services/api.services";
 
 interface Location {
   lat: number;
@@ -41,19 +44,24 @@ function MapPage() {
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [location, setLocation] = useState<Location | null>(null);
   const [shelters, setShelters] = useState<IRoom[]>([]);
+  const [searchParams] = useSearchParams(); // Get the search params
 
   const getShelters = useCallback(
     async (loc: Location) => {
       if (!loc || !map) return;
       try {
-        const response = await axios.get("http://localhost:3000/api/room");
+        // Prepare the query string based on the search params
+        const queryString = searchParams.toString();
+        const response = await api.get(
+          `http://localhost:3000/api/room?${queryString}`
+        );
         console.log("Shelters Data:", response.data.rooms);
         setShelters(response.data.rooms);
       } catch (err) {
         console.log(err);
       }
     },
-    [map]
+    [map, searchParams]
   );
 
   const centerMap = useCallback(() => {
@@ -144,6 +152,7 @@ function MapPage() {
               />
             ) : null
           )}
+          <FilterBtn loc={location} />
           <MyLocationBtn centerMap={centerMap} />
           <ColorMap />
         </GoogleMap>
