@@ -9,20 +9,9 @@ function MyLocationBtn({ centerMap }: MyLocationBtnProps) {
   return (
     <button
       onClick={centerMap}
-      style={{
-        position: "absolute",
-        bottom: "10px",
-        right: "10px",
-        zIndex: 10,
-        padding: "10px",
-        background: "#fff",
-        border: "none",
-        borderRadius: "5px",
-        cursor: "pointer",
-        boxShadow: "0 2px 6px rgba(0, 0, 0, 0.3)",
-      }}
+      className="absolute bottom-12 right-2 z-10 p-2 bg-white border-none rounded shadow-lg cursor-pointer"
     >
-      <FaLocationArrow size={20} color="#007bff" />
+      <FaLocationArrow size={20} className="text-blue-500" />
     </button>
   );
 }

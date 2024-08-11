@@ -3,7 +3,7 @@ import { formatJWTTokenToUser } from "@/lib/utils";
 import api from "@/services/api.services";
 import { createContext, useEffect, useState, ReactNode } from "react";
 
-interface IAddress {
+export interface IAddress {
   city: string;
   street: string;
   number: number;
@@ -11,20 +11,25 @@ interface IAddress {
   appartment: number;
 }
 
-interface IRoom {
+export interface IRoom {
   roomId?: string;
+  title: string;
   address: IAddress;
+  location: {
+    lng: number;
+    lat: number;
+  };
   description: string;
   image: string[];
   capacity: number;
   ownerId: string;
-  availability: boolean;
+  available: boolean;
   accessible: boolean;
-  public: boolean;
+  isPublic: boolean;
   createdAt?: string;
 }
 
-interface User {
+export interface User {
   userId?: string;
   firstName: string;
   lastName: string;
@@ -41,7 +46,7 @@ export interface IUserLoginData {
   password: FormDataEntryValue | null;
 }
 
-interface AuthContextProps {
+export interface AuthContextProps {
   loggedInUser: User | null;
   login: (token: string) => Promise<void>;
   logout: () => void;
