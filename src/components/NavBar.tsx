@@ -5,7 +5,7 @@ import { GrMapLocation } from "react-icons/gr";
 import { useNavigate } from "react-router-dom";
 import Drawer from "./Drawer";
 function NavBar() {
-  const [openLeft, setOpenLeft] = useState(false);
+  const [openSideBar, setOpenSideBar] = useState(false);
 
   const navigate = useNavigate();
 
@@ -14,7 +14,7 @@ function NavBar() {
       <div className="bg-blue-800 flex justify-between p-4 relative">
         <div className="w-28 sm:w-36 flex justify-between pl-3">
           <button
-            onClick={() => setOpenLeft(!openLeft)}
+            // onClick={() => setOpenSideBar(!openSideBar)}
             className="text-white hover:text-gray-300"
           >
             <GiHamburgerMenu size={32} />
