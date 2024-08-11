@@ -18,7 +18,7 @@ function App() {
           <Route path="myProfile" element={<MyProfile />} />
         </Route>
 
-        <Route path="/auth" element={<Outlet />}>
+        <Route path="/" element={<Outlet />}>
           <Route path="login" element={<LoginPage />} />
           <Route path="register" element={<RegisterPage />} />
         </Route>

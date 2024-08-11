@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 function ColorMap() {
   const [isOpen, setIsOpen] = useState(false);
@@ -9,6 +9,7 @@ function ColorMap() {
 
   return (
     <div
+
       className={` absolute bottom-10 left-9 bg-white rounded-lg shadow-md z-10 transition-all duration-300 ${
         isOpen ? "w-48" : "w-10"
       }`}

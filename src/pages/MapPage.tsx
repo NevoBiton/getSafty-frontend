@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { GoogleMap, MarkerF, useJsApiLoader } from "@react-google-maps/api";
 import MyLocationBtn from "../components/MyLocationBtn";
 import axios from "axios";
@@ -45,6 +45,7 @@ function MapPage() {
   const [location, setLocation] = useState<Location | null>(null);
   const [shelters, setShelters] = useState<IRoom[]>([]);
   const [searchParams] = useSearchParams(); // Get the search params
+
 
   const getShelters = useCallback(
     async (loc: Location) => {

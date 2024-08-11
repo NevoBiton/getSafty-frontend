@@ -66,26 +66,30 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token && loggedInUser === null) {
-      createLoggedInUser();
+      createLoggedInUser(token);
     }
   }, []);
 
-  async function createLoggedInUser() {
-    const token = localStorage.getItem("token");
+  async function createLoggedInUser(token: string) {
     if (token) {
       try {
-        const userId = formatJWTTokenToUser(token);
+        const { userId }: any = formatJWTTokenToUser(token);
+        console.log("createLoggedInUser - userId:", userId);
+
         const { data } = await api.get(`/auth/${userId}`);
+        const user = data.user;
+        console.log(user);
+
         setLoggedInUser({
-          userId: data._id,
-          firstName: data.firstName,
-          lastName: data.lastName,
-          email: data.email,
-          phoneNumber: data.phoneNumber,
-          profilePic: data.profilePic,
-          safeRooms: data.safeRooms,
-          favorites: data.favorites,
-          createdAt: data.createdAt,
+          userId: user._id,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          email: user.email,
+          phoneNumber: user.phoneNumber,
+          profilePic: user.profilePic,
+          safeRooms: user.safeRooms,
+          favorites: user.favorites,
+          createdAt: user.createdAt,
         });
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -99,21 +103,23 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     try {
       const { userId }: any = formatJWTTokenToUser(token);
       const { data } = await api.get(`/auth/${userId}`);
+      const user = data.user;
+      console.log(user);
 
       setLoggedInUser({
-        userId: data._id,
-        firstName: data.firstName,
-        lastName: data.lastName,
-        email: data.email,
-        phoneNumber: data.phoneNumber,
-        profilePic: data.profilePic,
-        safeRooms: data.safeRooms,
-        favorites: data.favorites,
-        createdAt: data.createdAt,
+        userId: user._id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        phoneNumber: user.phoneNumber,
+        profilePic: user.profilePic,
+        safeRooms: user.safeRooms,
+        favorites: user.favorites,
+        createdAt: user.createdAt,
       });
       toast({
         title: "Logged in successfully",
-        description: `${data.firstName} ${data.lastName}`,
+        description: `${user.firstName} ${user.lastName}`,
       });
     } catch (error) {
       toast({
