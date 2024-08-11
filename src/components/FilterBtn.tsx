@@ -1,5 +1,6 @@
 import { Filter } from "lucide-react";
 import React, { useState } from "react";
+import { FaWheelchair } from "react-icons/fa";
 import { useSearchParams } from "react-router-dom";
 
 interface Location {
@@ -26,7 +27,6 @@ function FilterBtn({ loc }: FilterBtnProps) {
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
 
-    // Prepare the search params with the form values and location
     const newSearchParams = new URLSearchParams(searchParams);
 
     if (wheelchairAccessible) {
@@ -53,10 +53,6 @@ function FilterBtn({ loc }: FilterBtnProps) {
       newSearchParams.delete("isPublic");
     }
 
-    // Debug: Check the loc object
-    console.log("Location object received:", loc);
-
-    // Use the provided loc object to set lat and lng
     if (loc?.lat && loc?.lng) {
       newSearchParams.set("lat", loc.lat.toString());
       newSearchParams.set("lng", loc.lng.toString());
@@ -64,28 +60,20 @@ function FilterBtn({ loc }: FilterBtnProps) {
       console.warn("Location data is missing or invalid.");
     }
 
-    // Debug: Check the searchParams before setting
-    console.log("New search params to be set:", newSearchParams.toString());
-
-    // Apply all search params at once
     setSearchParams(newSearchParams);
 
-    // Close the filter form after submission
     setIsOpen(false);
   }
 
   function handleReset() {
-    // Reset the form state
     setWheelchairAccessible(false);
     setOpen(false);
     setRadius("");
     setIsPublic(false);
 
-    // Clear all search params
     const newSearchParams = new URLSearchParams();
     setSearchParams(newSearchParams);
 
-    // Optionally close the filter form
     setIsOpen(false);
   }
 
@@ -98,78 +86,80 @@ function FilterBtn({ loc }: FilterBtnProps) {
         <Filter /> {/* lucide-react Filter icon */}
       </div>
 
-      {isOpen && (
-        <div
-          className="absolute top-20 left-9 bg-white rounded-lg shadow-lg p-4 transition-all duration-300"
-          style={{ width: "300px" }} // Adjust the width as needed
-        >
-          <form onSubmit={handleSubmit}>
-            <div className="flex items-center mb-2">
-              <input
-                type="checkbox"
-                id="accessible"
-                name="Accessible"
-                checked={wheelchairAccessible}
-                onChange={(e) => setWheelchairAccessible(e.target.checked)}
-                className="m-2"
-              />
-              <label htmlFor="accessible">Wheelchair Accessible</label>
-            </div>
+      <div
+        className={`absolute top-20 left-9 bg-white rounded-lg shadow-lg p-4 transition-all duration-300 transform ${
+          isOpen ? "opacity-100 scale-100" : "opacity-0 scale-95"
+        } ${isOpen ? "pointer-events-auto" : "pointer-events-none"}`}
+        style={{ width: "300px" }}
+      >
+        <form onSubmit={handleSubmit}>
+          <div className="flex items-center mb-2">
+            <input
+              type="checkbox"
+              id="accessible"
+              name="Accessible"
+              checked={wheelchairAccessible}
+              onChange={(e) => setWheelchairAccessible(e.target.checked)}
+              className="m-2"
+            />
+            <label htmlFor="accessible" className="flex gap-3 items-center">
+              <FaWheelchair /> Accessible
+            </label>
+          </div>
 
-            <div className="flex items-center mb-2">
-              <input
-                type="checkbox"
-                id="open"
-                name="open"
-                checked={open}
-                onChange={(e) => setOpen(e.target.checked)}
-                className="m-2"
-              />
-              <label htmlFor="open">Open</label>
-            </div>
+          <div className="flex items-center mb-2">
+            <input
+              type="checkbox"
+              id="open"
+              name="open"
+              checked={open}
+              onChange={(e) => setOpen(e.target.checked)}
+              className="m-2"
+            />
+            <label htmlFor="open">Open</label>
+          </div>
 
-            <div className="flex items-center mb-2">
-              <input
-                type="checkbox"
-                id="public"
-                name="public"
-                checked={isPublic}
-                onChange={(e) => setIsPublic(e.target.checked)}
-                className="m-2"
-              />
-              <label htmlFor="public">Public</label>
-            </div>
+          <div className="flex items-center mb-2">
+            <input
+              type="checkbox"
+              id="public"
+              name="public"
+              checked={isPublic}
+              onChange={(e) => setIsPublic(e.target.checked)}
+              className="m-2"
+            />
+            <label htmlFor="public">Public</label>
+          </div>
 
-            <div className="mb-4">
-              <input
-                type="number"
-                id="radius"
-                name="Radius"
-                value={radius}
-                onChange={(e) => setRadius(e.target.value)}
-                placeholder="Radius (km)"
-                className="w-full m-2 border-2 border-gray-300 p-2 rounded-md"
-              />
-            </div>
+          <div className="mb-4">
+            <input
+              type="number"
+              id="radius"
+              name="Radius"
+              value={radius}
+              onChange={(e) => setRadius(e.target.value)}
+              placeholder="Radius (km)"
+              className="w-full m-2 border-2 border-gray-300 p-2 rounded-md"
+            />
+          </div>
 
-            <div className="flex justify-between">
-              <button
-                type="submit"
-                className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 mr-2"
-              >
-                Apply Filter
-              </button>
-              <button
-                type="button"
-                onClick={handleReset}
-                className="w-full bg-gray-300 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-75"
-              >
-                Reset Filter
-              </button>
-            </div>
-          </form>
-        </div>
-      )}
+          <div className="flex justify-between">
+            <button
+              type="submit"
+              className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 mr-2"
+            >
+              Apply Filter
+            </button>
+            <button
+              type="button"
+              onClick={handleReset}
+              className="w-full bg-gray-300 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-75"
+            >
+              Reset Filter
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }

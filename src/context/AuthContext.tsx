@@ -20,7 +20,7 @@ export interface IRoom {
     lat: number;
   };
   description: string;
-  image: string[];
+  image?: string[];
   capacity: number;
   ownerId: string;
   available: boolean;
@@ -47,7 +47,7 @@ export interface IUserLoginData {
 }
 
 export interface AuthContextProps {
-  loggedInUser: User | null
+  loggedInUser: User | null;
   login: (token: string) => Promise<void>;
   logout: () => void;
 }
