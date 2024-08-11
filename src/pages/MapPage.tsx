@@ -10,6 +10,7 @@ import AddRoomDialog from "@/components/AddRoomDialog";
 import { AuthContext, IRoom } from "@/context/AuthContext";
 import ColorMap from "@/components/ColorMap";
 import FilterBtn from "@/components/FilterBtn";
+
 import { Outlet, useNavigate, useSearchParams } from "react-router-dom";
 import api from "@/services/api.services";
 import Loader from "@/components/ui/Loader";
@@ -44,7 +45,13 @@ const pinIcons = {
 
 function MapPage() {
   const { loggedInUser } = useContext(AuthContext)!;
+  const navigate = useNavigate();
 
+  useEffect(() => {
+    if (!loggedInUser) {
+      navigate("/");
+    }
+  }, []);
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: "AIzaSyDwY1nKLe_qB7XyA6_8uBsBkOG_uNdtxgg", // Use environment variable for API key
     libraries,
