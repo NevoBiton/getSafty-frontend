@@ -30,10 +30,6 @@ const RoomPage: React.FC = () => {
       console.log(err);
     }
   }
-  function formatNumber() {
-    if (!owner) return "0";
-    // Remove the leading '0' and prepend '972'
-  }
 
   useEffect(() => {
     getOwnerAndRoom();

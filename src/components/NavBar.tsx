@@ -19,7 +19,12 @@ function NavBar() {
           >
             <GiHamburgerMenu size={32} />
           </button>
-          <button className="text-white hovser:text-gray-300">
+          <button
+            className="text-white hovser:text-gray-300"
+            onClick={() => {
+              navigate("/myProfile");
+            }}
+          >
             <FaRegUser size={32} />
           </button>
         </div>
@@ -32,7 +37,12 @@ function NavBar() {
         </div>
         <div className="w-32 flex justify-between pl-3">
           <button className="text-white hover:text-gray-300">
-            <FaRegBookmark size={32} />
+            <FaRegBookmark
+              size={32}
+              onClick={() => {
+                navigate("favourites");
+              }}
+            />
           </button>
           <button>
             <img
@@ -44,7 +54,6 @@ function NavBar() {
         </div>
       </div>
       <DrawerComp openDrawer={openDrawer} setOpenDrawer={setOpenDrawer} />
-
     </>
   );
 }
