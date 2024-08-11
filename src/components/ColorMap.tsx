@@ -9,8 +9,9 @@ function ColorMap() {
 
   return (
     <div
-      className={`absolute bottom-10 left-10 bg-white rounded-lg shadow-md z-10 transition-all duration-300 ${
-        isOpen ? "w-48" : "w-16"
+
+      className={` absolute bottom-10 left-9 bg-white rounded-lg shadow-md z-10 transition-all duration-300 ${
+        isOpen ? "w-48" : "w-10"
       }`}
     >
       <button
@@ -19,8 +20,8 @@ function ColorMap() {
           isOpen ? "p-4" : "p-2"
         }`}
       >
-        <h3 className={`text-lg font-semibold ${!isOpen ? "hidden" : ""}`}>
-          Map Legend
+        <h3 className={`text-lg font-semibold text-center`}>
+          {isOpen ? "Map Legend" : "^"}
         </h3>
         {!isOpen && (
           <div className="flex justify-center">
