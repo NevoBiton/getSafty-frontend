@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { GoogleMap, MarkerF, useJsApiLoader } from "@react-google-maps/api";
 import MyLocationBtn from "../components/MyLocationBtn";
+import axios from "axios";
 
 interface Location {
   lat: number;
@@ -24,6 +25,16 @@ function MapPage() {
   const [shelters, setShelters] = useState<google.maps.places.PlaceResult[]>(
     []
   );
+
+  const getShelters = async (loc: Location) => {
+    if (!loc || !map) return;
+    try {
+      const response = await axios.get("http://localhost:3000/api/room");
+      console.log(typeof response.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const fetchShelters = (loc: Location) => {
     if (!loc || !map) return;
@@ -67,7 +78,7 @@ function MapPage() {
               new google.maps.LatLng(currentLocation.lat, currentLocation.lng)
             );
             map.setZoom(15); // Ensure zoom is adequate to view the location
-            fetchShelters(currentLocation);
+            getShelters(currentLocation);
           }
         },
         (error) => {
