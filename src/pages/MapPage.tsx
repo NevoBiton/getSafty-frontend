@@ -202,6 +202,11 @@ function MapPage() {
 
   return (
     <div>
+      <button onClick={() => setIsDialogOpen(true)}>TEST</button>
+      <AddRoomDialog
+        isOpen={isDialogOpen}
+        onClose={() => setIsDialogOpen(false)}
+      />
       {isLoaded && location ? (
         <GoogleMap
           mapContainerStyle={containerStyle}
@@ -288,6 +293,7 @@ function MapPage() {
             room={selectedRoom!}
           />
         </GoogleMap>
+
       ) : (
         <Loader />
       )}
