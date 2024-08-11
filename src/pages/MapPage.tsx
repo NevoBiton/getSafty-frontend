@@ -2,6 +2,8 @@ import React, { useEffect, useState, useCallback } from "react";
 import { GoogleMap, MarkerF, useJsApiLoader } from "@react-google-maps/api";
 import MyLocationBtn from "../components/MyLocationBtn";
 import axios from "axios";
+import { IRoom } from "@/context/AuthContext";
+import ColorMap from "@/components/ColorMap";
 
 interface Location {
   lat: number;
@@ -22,39 +24,17 @@ function MapPage() {
 
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [location, setLocation] = useState<Location | null>(null);
-  const [shelters, setShelters] = useState<google.maps.places.PlaceResult[]>(
-    []
-  );
+  const [shelters, setShelters] = useState<IRoom[]>([]);
 
   const getShelters = async (loc: Location) => {
     if (!loc || !map) return;
     try {
       const response = await axios.get("http://localhost:3000/api/room");
-      console.log(typeof response.data);
+      console.log("Shelters Data:", response.data.rooms); // Log the fetched data
+      setShelters(response.data.rooms);
     } catch (err) {
       console.log(err);
     }
-  };
-
-  const fetchShelters = (loc: Location) => {
-    if (!loc || !map) return;
-
-    const service = new google.maps.places.PlacesService(map);
-    service.nearbySearch(
-      {
-        location: loc,
-        radius: 50000,
-        keyword: "bomb shelter",
-      },
-      (results, status, pagination) => {
-        if (status === google.maps.places.PlacesServiceStatus.OK && results) {
-          setShelters((prev) => [...prev, ...results]);
-          if (pagination?.hasNextPage) {
-            setTimeout(() => pagination.nextPage(), 2000);
-          }
-        }
-      }
-    );
   };
 
   const centerMap = useCallback(() => {
@@ -95,10 +75,21 @@ function MapPage() {
     }
   }, [map]);
 
+  // Function to determine pin color based on shelter properties
+  const getPinColor = (shelter: IRoom) => {
+    if (!shelter.available) {
+      return "http://maps.google.com/mapfiles/ms/icons/red-dot.png"; // Grey for unavailable
+    }
+    return shelter.isPublic
+      ? "http://maps.google.com/mapfiles/ms/icons/orange-dot.png" // Orange for public
+      : "http://maps.google.com/mapfiles/ms/icons/green-dot.png"; // Green for private and available
+  };
+
   return (
     <div>
       {isLoaded && location ? (
         <GoogleMap
+          key={location.lat}
           mapContainerStyle={containerStyle}
           center={
             location
@@ -129,31 +120,31 @@ function MapPage() {
               scaledSize: new google.maps.Size(25, 25),
             }}
           />
-          {shelters.map(
-            (shelter, index) =>
-              shelter.geometry &&
-              shelter.geometry.location && (
-                <MarkerF
-                  key={`${shelter.place_id}-${index}`}
-                  position={{
-                    lat: shelter.geometry.location.lat(),
-                    lng: shelter.geometry.location.lng(),
-                  }}
-                  icon={{
-                    url: "http://maps.google.com/mapfiles/ms/icons/red-dot.png",
-                  }}
-                  onClick={() => {
-                    // Handle shelter click here
-                    alert(`Clicked on shelter: ${shelter.name}`);
-                  }}
-                />
-              )
+
+          {shelters.map((shelter: IRoom) =>
+            shelter.location ? (
+              <MarkerF
+                key={shelter.roomId}
+                position={{
+                  lat: shelter.location.lat,
+                  lng: shelter.location.lng,
+                }}
+                icon={{
+                  url: getPinColor(shelter), // Use the function to set the pin color
+                  scaledSize: new google.maps.Size(25, 25), // Set a consistent size for all pins
+                }}
+                onClick={() => {
+                  alert(`Clicked on shelter: ${shelter.available}`);
+                }}
+              />
+            ) : null
           )}
         </GoogleMap>
       ) : (
         <div>Loading...</div>
       )}
       <MyLocationBtn centerMap={centerMap} />
+      <ColorMap />
     </div>
   );
 }
