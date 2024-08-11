@@ -3,9 +3,9 @@ import { FaRegBookmark, FaRegUser } from "react-icons/fa";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { GrMapLocation } from "react-icons/gr";
 import { useNavigate } from "react-router-dom";
-import Drawer from "./Drawer";
+import DrawerComp from "./DrawerComp";
 function NavBar() {
-  const [openSideBar, setOpenSideBar] = useState(false);
+  const [openDrawer, setOpenDrawer] = useState(false);
 
   const navigate = useNavigate();
 
@@ -14,7 +14,7 @@ function NavBar() {
       <div className="bg-blue-800 flex justify-between p-4 relative">
         <div className="w-28 sm:w-36 flex justify-between pl-3">
           <button
-            // onClick={() => setOpenSideBar(!openSideBar)}
+            onClick={() => setOpenDrawer(!openDrawer)}
             className="text-white hover:text-gray-300"
           >
             <GiHamburgerMenu size={32} />
@@ -43,7 +43,8 @@ function NavBar() {
           </button>
         </div>
       </div>
-      <Drawer open={openSideBar} setOpen={setOpenSideBar} />
+
+      <DrawerComp openDrawer={openDrawer} setOpenDrawer={setOpenDrawer} />
     </>
   );
 }
