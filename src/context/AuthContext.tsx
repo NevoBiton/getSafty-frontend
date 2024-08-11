@@ -13,7 +13,7 @@ export interface IAddress {
 }
 
 export interface IRoom {
-  roomId?: string;
+  _id?: string;
   title: string;
   address: IAddress;
   location: {
@@ -31,7 +31,7 @@ export interface IRoom {
 }
 
 export interface User {
-  userId?: string;
+  _id?: string;
   firstName: string;
   lastName: string;
   email: string;
@@ -112,12 +112,16 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   const login = async (token: string) => {
     localStorage.setItem("token", token);
     try {
-      const { userId }: any = formatJWTTokenToUser(token);
-      const { data } = await api.get(`/auth/${userId}`);
+      console.log(formatJWTTokenToUser(token));
+
+      const { _id }: any = formatJWTTokenToUser(token);
+      console.log(_id);
+
+      const { data } = await api.get(`/auth/${_id}`);
       const { user } = data;
 
       setLoggedInUser({
-        userId: user._id,
+        _id: user._id,
         firstName: user.firstName,
         lastName: user.lastName,
         email: user.email,

@@ -43,8 +43,8 @@ function NavBar() {
           </button>
         </div>
       </div>
-
       <DrawerComp openDrawer={openDrawer} setOpenDrawer={setOpenDrawer} />
+
     </>
   );
 }
