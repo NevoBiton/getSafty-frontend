@@ -122,6 +122,11 @@ function MapPage() {
 
   return (
     <div>
+      <button onClick={() => setIsDialogOpen(true)}>TEST</button>
+      <AddRoomDialog
+        isOpen={isDialogOpen}
+        onClose={() => setIsDialogOpen(false)}
+      />
       {isLoaded && location ? (
         <GoogleMap
           mapContainerStyle={containerStyle}
@@ -162,12 +167,8 @@ function MapPage() {
           <FilterBtn loc={location} />
           <MyLocationBtn centerMap={centerMap} />
           <ColorMap />
-          <button onClick={() => setIsDialogOpen(true)}>TEST</button>
-          <AddRoomDialog
-            isOpen={isDialogOpen}
-            onClose={() => setIsDialogOpen(false)}
-          />
         </GoogleMap>
+
       ) : (
         <div>Loading...</div>
       )}
