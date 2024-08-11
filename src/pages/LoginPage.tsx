@@ -6,7 +6,6 @@ import { AuthContext, IUserLoginData } from "@/context/AuthContext";
 import api from "@/services/api.services";
 
 function LoginPage() {
-  const [error, setError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
 
   const authContext = useContext(AuthContext);
@@ -43,20 +42,10 @@ function LoginPage() {
 
   return (
     <div className="relative flex items-center justify-center min-h-screen bg-pink-100 px-[1em]">
-      <video
-        autoPlay
-        loop
-        muted
-        className="absolute w-full h-full object-cover z-0"
-      >
-        <source src={""} type="video/mp4" />
-        Your browser does not support the video tag.
-      </video>
       <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg w-full max-w-sm relative z-10">
         <h2 className="text-3xl font-bold mb-6 text-center text-pink-600">
           Login
         </h2>
-        {error && <p className="text-red-500 mb-4">{error}</p>}
         <form onSubmit={handleLogin} className="space-y-6">
           <div className="flex items-center border-b border-gray-300 py-2">
             <FaEnvelope className="text-gray-400 mr-3" />
