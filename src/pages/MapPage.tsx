@@ -1,10 +1,8 @@
 import { useEffect, useState, useCallback, useContext } from "react";
-
 import { GoogleMap, MarkerF, useJsApiLoader } from "@react-google-maps/api";
 import MyLocationBtn from "../components/MyLocationBtn";
 import AddRoomDialog from "@/components/AddRoomDialog";
-import axios from "axios";
-import { IRoom } from "@/context/AuthContext";
+import { AuthContext, IRoom } from "@/context/AuthContext";
 import ColorMap from "@/components/ColorMap";
 import FilterBtn from "@/components/FilterBtn";
 import { useSearchParams } from "react-router-dom";
@@ -38,10 +36,8 @@ const pinIcons = {
 };
 
 function MapPage() {
-
   const { loggedInUser } = useContext(AuthContext)!;
   console.log(loggedInUser);
-
 
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: "AIzaSyDas_FQg7La7_-kxRLy2cLNK0_sUkjIHTM", // Replace with your actual Google Maps API key
@@ -53,20 +49,7 @@ function MapPage() {
   const [shelters, setShelters] = useState<IRoom[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  const getShelters = async (loc: Location) => {
-    if (!loc || !map) return;
-    try {
-      const response = await axios.get("http://localhost:3000/api/room");
-      console.log("Shelters Data:", response.data.rooms);
-      setShelters(response.data.rooms);
-      console.log(shelters);
-
-    } catch (err) {
-      console.log(err);
-    }
-  };
   const [searchParams] = useSearchParams(); // Get the search params
-
 
   const getShelters = useCallback(
     async (loc: Location) => {
@@ -85,7 +68,6 @@ function MapPage() {
     },
     [map, searchParams]
   );
-
 
   const centerMap = useCallback(() => {
     if (location && map) {
@@ -125,9 +107,8 @@ function MapPage() {
     }
   }, [map, getShelters]);
 
-
   // Function to determine pin color based on shelter properties
-  
+
   const getPinColor = useCallback((shelter: IRoom) => {
     if (!shelter.available) {
       return pinIcons.red;
@@ -138,7 +119,6 @@ function MapPage() {
   const handleMarkerClick = useCallback((shelter: IRoom) => {
     alert(`Clicked on shelter: ${shelter.available}`);
   }, []);
-
 
   return (
     <div>
@@ -182,13 +162,15 @@ function MapPage() {
           <FilterBtn loc={location} />
           <MyLocationBtn centerMap={centerMap} />
           <ColorMap />
-           <button onClick={() => setIsDialogOpen(true)}>TEST</button>
-      <AddRoomDialog isOpen={isDialogOpen} onClose={() => setIsDialogOpen(false)} />
+          <button onClick={() => setIsDialogOpen(true)}>TEST</button>
+          <AddRoomDialog
+            isOpen={isDialogOpen}
+            onClose={() => setIsDialogOpen(false)}
+          />
         </GoogleMap>
       ) : (
         <div>Loading...</div>
       )}
-
     </div>
   );
 }
