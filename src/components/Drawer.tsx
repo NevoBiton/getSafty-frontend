@@ -11,7 +11,7 @@ const Drawer = ({ open, setOpen }: DrawerProps) => {
       aria-labelledby="slide-over"
       role="dialog"
       aria-modal="true"
-      onClick={() => setOpen(!open)}
+      // onClick={() => setOpen(!open)}
     >
       <div
         className={`fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity duration-500 ease-in-out ${
