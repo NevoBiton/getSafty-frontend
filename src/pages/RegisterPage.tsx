@@ -33,18 +33,17 @@ function RegisterPage() {
     profilePic: "",
   });
 
-  const authContext = useContext(AuthContext);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [customError, setCustomError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
+  const authContext = useContext(AuthContext);
 
   if (!authContext) {
     throw new Error("RegisterPage must be used within an AuthProvider");
   }
-
   const { loggedInUser } = authContext;
 
   useEffect(() => {
@@ -159,6 +158,8 @@ function RegisterPage() {
                 id="password"
                 name="password"
                 placeholder="Password"
+                value={formData.password}
+                onChange={handleChange}
                 className="w-full p-2 text-gray-700 dark:text-white dark:bg-gray-800 focus:outline-none"
                 required
               />
@@ -200,7 +201,7 @@ function RegisterPage() {
               placeholder="Profile Picture"
               className="w-full p-2 text-gray-700 dark:text-white dark:bg-gray-800 focus:outline-none"
               required
-              value={formData.phoneNumber}
+              value={formData.profilePic}
               onChange={handleChange}
             />
           </div>
