@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
 import { GoogleMap, MarkerF, useJsApiLoader } from "@react-google-maps/api";
 import MyLocationBtn from "../components/MyLocationBtn";
 import axios from "axios";
@@ -13,7 +13,23 @@ interface Location {
 const libraries: "places"[] = ["places"];
 const containerStyle = {
   width: "100vw",
-  height: "100vh",
+  height: "90vh",
+};
+
+const mapOptions = {
+  disableDefaultUI: true,
+  zoomControl: false,
+  fullscreenControl: false,
+  streetViewControl: false,
+  mapTypeControl: false,
+  clickableIcons: false, // Disable clicking on places other than the bomb shelters
+};
+
+const pinIcons = {
+  blue: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png",
+  red: "http://maps.google.com/mapfiles/ms/icons/red-dot.png",
+  orange: "http://maps.google.com/mapfiles/ms/icons/orange-dot.png",
+  green: "http://maps.google.com/mapfiles/ms/icons/green-dot.png",
 };
 
 function MapPage() {
@@ -26,21 +42,24 @@ function MapPage() {
   const [location, setLocation] = useState<Location | null>(null);
   const [shelters, setShelters] = useState<IRoom[]>([]);
 
-  const getShelters = async (loc: Location) => {
-    if (!loc || !map) return;
-    try {
-      const response = await axios.get("http://localhost:3000/api/room");
-      console.log("Shelters Data:", response.data.rooms); // Log the fetched data
-      setShelters(response.data.rooms);
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  const getShelters = useCallback(
+    async (loc: Location) => {
+      if (!loc || !map) return;
+      try {
+        const response = await axios.get("http://localhost:3000/api/room");
+        console.log("Shelters Data:", response.data.rooms);
+        setShelters(response.data.rooms);
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    [map]
+  );
 
   const centerMap = useCallback(() => {
     if (location && map) {
       map.panTo(new google.maps.LatLng(location.lat, location.lng));
-      map.setZoom(15); // Set a reasonable zoom level
+      map.setZoom(20);
     }
   }, [location, map]);
 
@@ -57,39 +76,39 @@ function MapPage() {
             map.setCenter(
               new google.maps.LatLng(currentLocation.lat, currentLocation.lng)
             );
-            map.setZoom(15); // Ensure zoom is adequate to view the location
+            map.setZoom(20);
             getShelters(currentLocation);
           }
         },
         (error) => {
           console.error("Error obtaining location: ", error);
         },
-        { enableHighAccuracy: true } // Use high accuracy if available
+        { enableHighAccuracy: true }
       );
 
       return () => {
-        navigator.geolocation.clearWatch(watchId); // Clear the watch when the component unmounts
+        navigator.geolocation.clearWatch(watchId);
       };
     } else {
       console.log("Geolocation is not supported by this browser.");
     }
-  }, [map]);
+  }, [map, getShelters]);
 
-  // Function to determine pin color based on shelter properties
-  const getPinColor = (shelter: IRoom) => {
+  const getPinColor = useCallback((shelter: IRoom) => {
     if (!shelter.available) {
-      return "http://maps.google.com/mapfiles/ms/icons/red-dot.png"; // Grey for unavailable
+      return pinIcons.red;
     }
-    return shelter.isPublic
-      ? "http://maps.google.com/mapfiles/ms/icons/orange-dot.png" // Orange for public
-      : "http://maps.google.com/mapfiles/ms/icons/green-dot.png"; // Green for private and available
-  };
+    return shelter.isPublic ? pinIcons.orange : pinIcons.green;
+  }, []);
+
+  const handleMarkerClick = useCallback((shelter: IRoom) => {
+    alert(`Clicked on shelter: ${shelter.available}`);
+  }, []);
 
   return (
     <div>
       {isLoaded && location ? (
         <GoogleMap
-          key={location.lat}
           mapContainerStyle={containerStyle}
           center={
             location
@@ -97,54 +116,40 @@ function MapPage() {
               : undefined
           }
           zoom={15}
-          onLoad={(map) => {
-            setMap(map);
-
-            // Disable clicking on places other than the bomb shelters
-            map.setOptions({
-              clickableIcons: false,
-            });
-          }}
-          options={{
-            disableDefaultUI: true, // Disable all default UI
-            zoomControl: false, // Disable the zoom control so users can manually zoom
-            fullscreenControl: false, // Disable the fullscreen control
-            streetViewControl: false, // Disable the street view control
-            mapTypeControl: false, // Disable the map type control
-          }}
+          onLoad={setMap}
+          options={mapOptions}
         >
           <MarkerF
+            key={1}
             position={new google.maps.LatLng(location.lat, location.lng)}
             icon={{
-              url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png",
+              url: pinIcons.blue,
               scaledSize: new google.maps.Size(25, 25),
             }}
           />
 
-          {shelters.map((shelter: IRoom) =>
+          {shelters.map((shelter: IRoom, index) =>
             shelter.location ? (
               <MarkerF
-                key={shelter.roomId}
+                key={`${shelter.roomId}${index}`}
                 position={{
                   lat: shelter.location.lat,
                   lng: shelter.location.lng,
                 }}
                 icon={{
-                  url: getPinColor(shelter), // Use the function to set the pin color
-                  scaledSize: new google.maps.Size(25, 25), // Set a consistent size for all pins
+                  url: getPinColor(shelter),
+                  scaledSize: new google.maps.Size(25, 25),
                 }}
-                onClick={() => {
-                  alert(`Clicked on shelter: ${shelter.available}`);
-                }}
+                onClick={() => handleMarkerClick(shelter)}
               />
             ) : null
           )}
+          <MyLocationBtn centerMap={centerMap} />
+          <ColorMap />
         </GoogleMap>
       ) : (
         <div>Loading...</div>
       )}
-      <MyLocationBtn centerMap={centerMap} />
-      <ColorMap />
     </div>
   );
 }
