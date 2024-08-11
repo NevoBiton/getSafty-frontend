@@ -1,4 +1,3 @@
-import React from "react";
 import { FaLocationArrow } from "react-icons/fa6";
 
 interface MyLocationBtnProps {

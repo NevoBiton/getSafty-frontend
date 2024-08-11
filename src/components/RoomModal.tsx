@@ -1,7 +1,6 @@
 import App from "@/App";
 import { IAddress, IRoom, User } from "@/context/AuthContext";
 import api from "@/services/api.services";
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 // Make sure to import the correct version of react-icons
 import { FaTimes, FaWhatsapp, FaWheelchair } from "react-icons/fa";
