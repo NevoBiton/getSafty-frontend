@@ -262,7 +262,7 @@ const AddRoomDialog: React.FC<AddRoomDialogProps> = ({ isOpen, onClose }) => {
     number: "",
   });
 
-  const { loggedInUser } = useContext(AuthContext)!;
+  const { loggedInUser, userRooms, setUserRooms } = useContext(AuthContext)!;
 
   const onLoad = (autocompleteInstance: google.maps.places.Autocomplete) => {
     setAutocomplete(autocompleteInstance);
@@ -355,12 +355,13 @@ const AddRoomDialog: React.FC<AddRoomDialogProps> = ({ isOpen, onClose }) => {
     console.log(roomData);
 
     try {
-      await api.post("/room", roomData, {
+      const { data: newRoom } = await api.post("/room", roomData, {
         headers: {
           "Content-Type": "application/json",
         },
       });
       console.log("Room added successfully");
+      setUserRooms((prevUserRooms: any) => [...prevUserRooms, newRoom]);
       onClose(); // Close the dialog after submission
     } catch (err) {
       console.error("Error adding room:", err);

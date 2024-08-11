@@ -1,6 +1,7 @@
 import { toast } from "@/components/ui/use-toast";
 import { formatJWTTokenToUser } from "@/lib/utils";
 import api from "@/services/api.services";
+import { SwatchBook } from "lucide-react";
 import { createContext, useEffect, useState, ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -52,6 +53,9 @@ export interface AuthContextProps {
   login: (token: string) => Promise<void>;
   logout: () => void;
   userRooms: IRoom[] | null;
+  setUserRooms: any;
+  favRooms: IRoom[] | null;
+  setFavRooms: any;
 }
 
 export const AuthContext = createContext<AuthContextProps | undefined>(
@@ -65,6 +69,7 @@ interface AuthProviderProps {
 const AuthProvider = ({ children }: AuthProviderProps) => {
   const [loggedInUser, setLoggedInUser] = useState<User | null>(null);
   const [userRooms, setUserRooms] = useState<IRoom[] | null>(null);
+  const [favRooms, setFavRooms] = useState<IRoom[] | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -128,6 +133,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         createdAt: user.createdAt,
       });
       fetchRooms(userId);
+      getFavById(userId);
       toast({
         title: "Logged in successfully",
         description: `${user.firstName} ${user.lastName}`,
@@ -147,8 +153,26 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     navigate("/");
   };
 
+  const getFavById = async (userId: string) => {
+    if (!userId) return;
+    const { data } = await api.get(`/room/user/fav/${userId}`);
+    const { favRooms } = data;
+
+    setFavRooms(favRooms);
+  };
+
   return (
-    <AuthContext.Provider value={{ loggedInUser, login, logout, userRooms }}>
+    <AuthContext.Provider
+      value={{
+        loggedInUser,
+        login,
+        logout,
+        userRooms,
+        setUserRooms,
+        favRooms,
+        setFavRooms,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

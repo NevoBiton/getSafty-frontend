@@ -14,7 +14,6 @@ import FilterBtn from "@/components/FilterBtn";
 import { Outlet, useNavigate, useSearchParams } from "react-router-dom";
 import api from "@/services/api.services";
 import Loader from "@/components/ui/Loader";
-import RoomModal from "@/components/RoomModal";
 
 interface Location {
   lat: number;
@@ -77,7 +76,7 @@ function MapPage() {
         const response = await api.get(
           `http://localhost:3000/api/room?${queryString}`
         );
-        console.log("Shelters Data:", response.data.rooms);
+
         setShelters(response.data.rooms);
       } catch (err) {
         console.log(err);
@@ -95,8 +94,8 @@ function MapPage() {
             lat: position.coords.latitude,
             lng: position.coords.longitude,
           };
-          setLocation(NewcurrentLocation);
-          setCurrentLocaton(NewcurrentLocation);
+
+          // Center the map immediately
           if (map) {
             map.panTo(
               new google.maps.LatLng(
@@ -105,25 +104,30 @@ function MapPage() {
               )
             );
             map.setZoom(15);
-            getShelters(NewcurrentLocation);
           }
+
+          // Set state and fetch shelters afterward
+          setLocation(NewcurrentLocation);
+          setCurrentLocaton(NewcurrentLocation);
+          getShelters(NewcurrentLocation);
         },
         (error) => {
           console.error("Error obtaining location: ", error);
-          // Fallback to a default location or inform the user
+
+          // Fallback to a default location
           const defaultLocation: Location = { lat: 0, lng: 0 };
-          setLocation(defaultLocation);
           if (map) {
             map.panTo(
               new google.maps.LatLng(defaultLocation.lat, defaultLocation.lng)
             );
             map.setZoom(20);
           }
+          setLocation(defaultLocation);
         },
         {
-          enableHighAccuracy: false,
-          timeout: 10000, // Increase timeout
-          maximumAge: 30000, // Use cached location if available
+          enableHighAccuracy: true, // Request higher accuracy
+          timeout: 5000, // Reduce timeout for quicker fallback
+          maximumAge: 10000, // Use cached location if available
         }
       );
     } else {
@@ -161,7 +165,7 @@ function MapPage() {
     } else {
       console.log("Geolocation is not supported by this browser.");
     }
-  }, [map, getShelters]);
+  }, [map]);
 
   // Function to handle marker click
   const getPinColor = useCallback((shelter: IRoom) => {

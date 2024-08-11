@@ -1,38 +1,62 @@
-import React, { useEffect, useState } from "react";
-import { FaTimes, FaWhatsapp, FaWheelchair } from "react-icons/fa";
+import React, { useContext, useEffect, useState } from "react";
+import {
+  FaRegBookmark,
+  FaTimes,
+  FaWhatsapp,
+  FaWheelchair,
+} from "react-icons/fa";
 import { IoMdCheckmark } from "react-icons/io";
 import { useNavigate, useParams } from "react-router-dom";
 import api from "@/services/api.services";
 import Loader from "@/components/ui/Loader"; // Adjust the path based on your file structure
-import { IRoom, User } from "@/context/AuthContext"; // Adjust the path based on your file structure
+import { AuthContext, IRoom, User } from "@/context/AuthContext"; // Adjust the path based on your file structure
 import { FaPhoneFlip } from "react-icons/fa6";
 
 const RoomPage: React.FC = () => {
   const { id } = useParams<{ id: string }>(); // Extract _id from the URL
   const [room, setRoom] = useState<IRoom>();
+  const [favState, setFavState] = useState<boolean>(false);
   const [owner, setOwner] = useState<User | null>(null);
   const [formatedNumber, setFormatedNumber] = useState<string>("");
   const nav = useNavigate();
+  const authContext = useContext(AuthContext);
+
+  // Ensure the user is logged in
+  useEffect(() => {
+    if (!authContext || !authContext.loggedInUser) {
+      nav("/login");
+    }
+  }, [authContext, nav]);
+
+  if (!authContext) {
+    return <div>Error: AuthContext is not available.</div>;
+  }
+
+  const { loggedInUser, favRooms = [], setFavRooms } = authContext;
+
+  // Use useEffect to check favorite status when favRooms or id changes
+  useEffect(() => {
+    if (favRooms && id) {
+      const isFavorite = favRooms.some((fav: IRoom) => fav._id === id);
+      setFavState(isFavorite);
+    }
+  }, [favRooms, id]);
 
   async function getOwnerAndRoom() {
     try {
       const { data } = await api.get(`/room/${id}`);
       setRoom(data.room);
-      const response = await api.get(`/auth/${data.room.ownerId}`);
-      console.log(response.data.user);
-      setOwner(response.data.user);
-      if (response.data.user.phoneNumber.startsWith("0")) {
-        setFormatedNumber("972" + response.data.user.phoneNumber.slice(1));
-      } else {
-        setFormatedNumber(response.data.user.phoneNumber);
+
+      if (loggedInUser) {
+        if (loggedInUser.phoneNumber.startsWith("0")) {
+          setFormatedNumber("972" + loggedInUser.phoneNumber.slice(1));
+        } else {
+          setFormatedNumber(loggedInUser.phoneNumber);
+        }
       }
     } catch (err) {
       console.log(err);
     }
-  }
-  function formatNumber() {
-    if (!owner) return "0";
-    // Remove the leading '0' and prepend '972'
   }
 
   useEffect(() => {
@@ -42,18 +66,48 @@ const RoomPage: React.FC = () => {
   if (!room) {
     return <Loader />;
   }
+
   const handleWhatsAppClick = () => {
-    if (formatedNumber != "") {
+    if (formatedNumber !== "") {
       window.open(`https://wa.me/${formatedNumber}`, "_blank");
     }
   };
-  const handlePhoneClick = () => {
-    console.log(formatedNumber);
 
-    if (formatedNumber != "") {
+  const handlePhoneClick = () => {
+    if (formatedNumber !== "") {
       window.open(`tel:${formatedNumber}`, "_blank");
     }
   };
+
+  async function toggleFav() {
+    if (!loggedInUser) return;
+
+    try {
+      const { data } = await api.patch(`/room/favorite/${id}`);
+
+      // Update the favorites array in the context
+      let updatedFavorites: any;
+      if (favRooms) {
+        if (data.state) {
+          updatedFavorites = [...favRooms, room];
+        } else {
+          updatedFavorites = favRooms.filter((fav: IRoom) => fav._id !== id);
+        }
+      } else if (data.this.state) {
+        updatedFavorites = [room];
+      } else {
+        updatedFavorites = [];
+      }
+
+      // Set the updated favorites array in the context
+      setFavRooms(updatedFavorites);
+
+      // Update the favState based on the updated favorites array
+      setFavState(data.state);
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
@@ -100,16 +154,26 @@ const RoomPage: React.FC = () => {
         </div>
         <div>
           {" "}
-          <h4>Owner: {owner?.firstName + " " + owner?.lastName}</h4>
-          <div className="flex m-2 gap-3">
-            <FaWhatsapp
-              className="largeIcon text-green-500 text-3xl cursor-pointer"
-              onClick={handleWhatsAppClick}
-            />
-            <FaPhoneFlip
-              className="largeIcon text-green-800 text-3xl cursor-pointer"
-              onClick={handlePhoneClick}
-            />
+          <h4>
+            Owner: {loggedInUser?.firstName + " " + loggedInUser?.lastName}
+          </h4>
+          <div className="flex items-center justify-between">
+            <div className="flex m-2 gap-3">
+              <FaWhatsapp
+                className="largeIcon text-green-500 text-3xl cursor-pointer"
+                onClick={handleWhatsAppClick}
+              />
+              <FaPhoneFlip
+                className="largeIcon text-green-800 text-3xl cursor-pointer"
+                onClick={handlePhoneClick}
+              />
+            </div>
+            <div className="m-2 text-2xl">
+              <FaRegBookmark
+                onClick={toggleFav}
+                className={favState ? ` text-orange-600` : `text-black`}
+              />
+            </div>
           </div>
         </div>
       </div>
