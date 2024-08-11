@@ -55,6 +55,7 @@ export interface AuthContextProps {
   userRooms: IRoom[] | null;
   setUserRooms: any;
   favRooms: IRoom[] | null;
+  setFavRooms: any;
 }
 
 export const AuthContext = createContext<AuthContextProps | undefined>(
@@ -171,6 +172,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         userRooms,
         setUserRooms,
         favRooms,
+        setFavRooms,
       }}
     >
       {children}
