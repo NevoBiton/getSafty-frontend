@@ -7,6 +7,7 @@ import api from "@/services/api.services";
 
 function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
 
   const authContext = useContext(AuthContext);
 
@@ -15,13 +16,11 @@ function LoginPage() {
   }
   const { loggedInUser, login } = authContext;
 
-  const navigate = useNavigate();
-
   useEffect(() => {
     if (loggedInUser !== null) {
-      navigate("/");
+      navigate("/map");
     }
-  }, []);
+  }, [loggedInUser]);
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -34,7 +33,7 @@ function LoginPage() {
     try {
       const { data } = await api.post("/auth/login", userLoginData);
       login(data.token);
-      navigate(-1);
+      navigate("/map");
     } catch (error) {
       console.log(error);
     }

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { GoogleMap, MarkerF, useJsApiLoader } from "@react-google-maps/api";
 import MyLocationBtn from "../components/MyLocationBtn";
 import axios from "axios";
@@ -13,7 +13,7 @@ interface Location {
 const libraries: "places"[] = ["places"];
 const containerStyle = {
   width: "100vw",
-  height: "100vh",
+  height: "90vh",
 };
 
 function MapPage() {
@@ -25,6 +25,8 @@ function MapPage() {
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [location, setLocation] = useState<Location | null>(null);
   const [shelters, setShelters] = useState<IRoom[]>([]);
+
+  useEffect(() => {}, []);
 
   const getShelters = async (loc: Location) => {
     if (!loc || !map) return;
@@ -139,12 +141,12 @@ function MapPage() {
               />
             ) : null
           )}
+          <MyLocationBtn centerMap={centerMap} />
+          <ColorMap />
         </GoogleMap>
       ) : (
         <div>Loading...</div>
       )}
-      <MyLocationBtn centerMap={centerMap} />
-      <ColorMap />
     </div>
   );
 }
