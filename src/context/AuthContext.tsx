@@ -12,7 +12,7 @@ export interface IAddress {
 }
 
 export interface IRoom {
-  roomId?: string;
+  _id?: string;
   title: string;
   address: IAddress;
   location: {

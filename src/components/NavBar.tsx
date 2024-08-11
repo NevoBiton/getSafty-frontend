@@ -43,7 +43,7 @@ function NavBar() {
           </button>
         </div>
       </div>
-      <Drawer open={openSideBar} setOpen={setOpenSideBar} />
+      {/* <Drawer open={openLeft} setOpen={setOpenLeft} /> */}
     </>
   );
 }
