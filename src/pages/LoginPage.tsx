@@ -34,7 +34,7 @@ function LoginPage() {
     try {
       const { data } = await api.post("/auth/login", userLoginData);
       login(data.token);
-      navigate(-1);
+      navigate("/map");
     } catch (error) {
       console.log(error);
     }

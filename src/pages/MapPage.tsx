@@ -1,9 +1,11 @@
-import React, { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useContext } from "react";
 import { GoogleMap, MarkerF, useJsApiLoader } from "@react-google-maps/api";
 import MyLocationBtn from "../components/MyLocationBtn";
+import AddRoomDialog from "@/components/AddRoomDialog";
 import axios from "axios";
 import { IRoom } from "@/context/AuthContext";
 import ColorMap from "@/components/ColorMap";
+import { AuthContext } from "@/context/AuthContext";
 
 interface Location {
   lat: number;
@@ -17,25 +19,34 @@ const containerStyle = {
 };
 
 function MapPage() {
+
+  const { loggedInUser } = useContext(AuthContext)!;
+  console.log(loggedInUser);
+
+
   const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: "AIzaSyDwY1nKLe_qB7XyA6_8uBsBkOG_uNdtxgg", // Replace with your actual Google Maps API key
+    googleMapsApiKey: "AIzaSyDas_FQg7La7_-kxRLy2cLNK0_sUkjIHTM", // Replace with your actual Google Maps API key
     libraries,
   });
 
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [location, setLocation] = useState<Location | null>(null);
   const [shelters, setShelters] = useState<IRoom[]>([]);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const getShelters = async (loc: Location) => {
     if (!loc || !map) return;
     try {
       const response = await axios.get("http://localhost:3000/api/room");
-      console.log("Shelters Data:", response.data.rooms); // Log the fetched data
+      console.log("Shelters Data:", response.data.rooms);
       setShelters(response.data.rooms);
+      console.log(shelters);
+
     } catch (err) {
       console.log(err);
     }
   };
+
 
   const centerMap = useCallback(() => {
     if (location && map) {
@@ -75,6 +86,7 @@ function MapPage() {
     }
   }, [map]);
 
+
   // Function to determine pin color based on shelter properties
   const getPinColor = (shelter: IRoom) => {
     if (!shelter.available) {
@@ -84,6 +96,7 @@ function MapPage() {
       ? "http://maps.google.com/mapfiles/ms/icons/orange-dot.png" // Orange for public
       : "http://maps.google.com/mapfiles/ms/icons/green-dot.png"; // Green for private and available
   };
+
 
   return (
     <div>
@@ -145,6 +158,9 @@ function MapPage() {
       )}
       <MyLocationBtn centerMap={centerMap} />
       <ColorMap />
+      <button onClick={() => setIsDialogOpen(true)}>TEST</button>
+
+      <AddRoomDialog isOpen={isDialogOpen} onClose={() => setIsDialogOpen(false)} />
     </div>
   );
 }
