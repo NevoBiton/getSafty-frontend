@@ -47,7 +47,7 @@ export interface IUserLoginData {
 }
 
 export interface AuthContextProps {
-  loggedInUser: User | null;
+  loggedInUser: User | null
   login: (token: string) => Promise<void>;
   logout: () => void;
 }
@@ -74,11 +74,8 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     if (token) {
       try {
         const { userId }: any = formatJWTTokenToUser(token);
-        console.log("createLoggedInUser - userId:", userId);
-
         const { data } = await api.get(`/auth/${userId}`);
-        const user = data.user;
-        console.log(user);
+        const { user } = data;
 
         setLoggedInUser({
           userId: user._id,
@@ -103,8 +100,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     try {
       const { userId }: any = formatJWTTokenToUser(token);
       const { data } = await api.get(`/auth/${userId}`);
-      const user = data.user;
-      console.log(user);
+      const { user } = data;
 
       setLoggedInUser({
         userId: user._id,
