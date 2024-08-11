@@ -1,23 +1,27 @@
-import { Route, Routes } from "react-router-dom";
+import { Outlet, Route, Routes } from "react-router-dom";
 import LandingPage from "./pages/LandingPage";
 import LoginPage from "./pages/LoginPage";
 import MapPage from "./pages/MapPage";
 import RegisterPage from "./pages/RegisterPage";
 import InstructionsPage from "./pages/InstructionsPage";
 import MyProfile from "./pages/MyProfile";
-import NavBar from "./components/NavBar";
+import MainLayout from "./context/MainLayout";
 
 function App() {
   return (
     <>
-      <NavBar />
       <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="map" element={<MapPage />} />
-        <Route path="instructions" element={<InstructionsPage />} />
-        <Route path="myProfile" element={<MyProfile />} />
-        <Route path="login" element={<LoginPage />} />
-        <Route path="register" element={<RegisterPage />} />
+        <Route path="/" element={<MainLayout />}>
+          <Route index element={<LandingPage />} />
+          <Route path="map" element={<MapPage />} />
+          <Route path="instructions" element={<InstructionsPage />} />
+          <Route path="myProfile" element={<MyProfile />} />
+        </Route>
+
+        <Route path="/auth" element={<Outlet />}>
+          <Route path="login" element={<LoginPage />} />
+          <Route path="register" element={<RegisterPage />} />
+        </Route>
       </Routes>
     </>
   );
