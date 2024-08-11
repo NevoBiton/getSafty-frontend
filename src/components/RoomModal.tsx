@@ -20,32 +20,34 @@ const RoomPage: React.FC = () => {
   const [formatedNumber, setFormatedNumber] = useState<string>("");
   const nav = useNavigate();
   const authContext = useContext(AuthContext);
+
+  // Ensure the user is logged in
   useEffect(() => {
     if (!authContext || !authContext.loggedInUser) {
       nav("/login");
     }
   }, [authContext, nav]);
+
   if (!authContext) {
     return <div>Error: AuthContext is not available.</div>;
   }
 
-  const { loggedInUser, favRooms, setFavRooms } = authContext;
+  const { loggedInUser, favRooms = [], setFavRooms } = authContext;
 
-  function getFavStatus() {
-    favRooms?.forEach((fav: IRoom) => {
-      if (fav._id === id) {
-        setFavState(true);
-        return;
-      }
-    });
-  }
+  // Use useEffect to check favorite status when favRooms or id changes
+  useEffect(() => {
+    if (favRooms && id) {
+      const isFavorite = favRooms.some((fav: IRoom) => fav._id === id);
+      setFavState(isFavorite);
+    }
+  }, [favRooms, id]);
 
   async function getOwnerAndRoom() {
     try {
       const { data } = await api.get(`/room/${id}`);
       setRoom(data.room);
+
       if (loggedInUser) {
-        getFavStatus();
         if (loggedInUser.phoneNumber.startsWith("0")) {
           setFormatedNumber("972" + loggedInUser.phoneNumber.slice(1));
         } else {
@@ -64,38 +66,44 @@ const RoomPage: React.FC = () => {
   if (!room) {
     return <Loader />;
   }
+
   const handleWhatsAppClick = () => {
-    if (formatedNumber != "") {
+    if (formatedNumber !== "") {
       window.open(`https://wa.me/${formatedNumber}`, "_blank");
     }
   };
-  const handlePhoneClick = () => {
-    console.log(formatedNumber);
 
-    if (formatedNumber != "") {
+  const handlePhoneClick = () => {
+    if (formatedNumber !== "") {
       window.open(`tel:${formatedNumber}`, "_blank");
     }
   };
 
   async function toggleFav() {
     if (!loggedInUser) return;
+
     try {
       const { data } = await api.patch(`/room/favorite/${id}`);
-      setFavState(data.state);
-      if (loggedInUser) {
-        let updatedFavorites;
+
+      // Update the favorites array in the context
+      let updatedFavorites: any;
+      if (favRooms) {
         if (data.state) {
-          // Add the room ID to the favorites if it was added
-          updatedFavorites = [...loggedInUser.favorites, id];
+          updatedFavorites = [...favRooms, room];
         } else {
-          // Remove the room ID from the favorites if it was removed
-          updatedFavorites = loggedInUser.favorites.filter(
-            (favId) => favId.toString() !== id
-          );
+          updatedFavorites = favRooms.filter((fav: IRoom) => fav._id !== id);
         }
-        // Update the owner state with the new favorites array
-        setFavRooms(updatedFavorites);
+      } else if (data.this.state) {
+        updatedFavorites = [room];
+      } else {
+        updatedFavorites = [];
       }
+
+      // Set the updated favorites array in the context
+      setFavRooms(updatedFavorites);
+
+      // Update the favState based on the updated favorites array
+      setFavState(data.state);
     } catch (err) {
       console.log(err);
     }
