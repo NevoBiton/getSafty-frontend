@@ -23,7 +23,7 @@ interface Location {
 const libraries: "places"[] = ["places"];
 const containerStyle = {
   width: "100vw",
-  height: "90vh",
+  height: "85vh",
 };
 
 const mapOptions = {
