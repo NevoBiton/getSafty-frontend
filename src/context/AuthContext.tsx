@@ -112,12 +112,8 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   const login = async (token: string) => {
     localStorage.setItem("token", token);
     try {
-      console.log(formatJWTTokenToUser(token));
-
-      const { _id }: any = formatJWTTokenToUser(token);
-      console.log(_id);
-
-      const { data } = await api.get(`/auth/${_id}`);
+      const { userId }: any = formatJWTTokenToUser(token);
+      const { data } = await api.get(`/auth/${userId}`);
       const { user } = data;
 
       setLoggedInUser({
