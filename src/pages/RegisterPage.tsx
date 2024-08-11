@@ -1,22 +1,51 @@
-import { useState } from "react";
+import { useContext, useState, ChangeEvent, FormEvent, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import {
+  FaLock,
+  FaEnvelope,
+  FaIdBadge,
+  FaEyeSlash,
+  FaEye,
+  FaPhone,
+  FaImage,
+} from "react-icons/fa";
+import { Link } from "react-router-dom";
+import api from "@/services/api.services";
+import { AuthContext } from "@/context/AuthContext";
+import { useToast } from "@/components/ui/use-toast";
+
+interface FormData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  phoneNumber: string;
+  profilePic: string;
+}
 
 function RegisterPage() {
   const [formData, setFormData] = useState<FormData>({
-    username: "",
-    password: "",
     firstName: "",
     lastName: "",
     email: "",
-    likes: [],
+    password: "",
+    phoneNumber: "",
+    profilePic: "",
   });
 
-  const navigate = useNavigate();
+  const authContext = useContext(AuthContext);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [customError, setCustomError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
   const { toast } = useToast();
+
+  if (!authContext) {
+    throw new Error("RegisterPage must be used within an AuthProvider");
+  }
+
+  const { loggedInUser } = authContext;
 
   useEffect(() => {
     if (loggedInUser !== null) {
@@ -24,6 +53,7 @@ function RegisterPage() {
     }
   }, [loggedInUser, navigate]);
 
+  // Handle form change
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
@@ -31,12 +61,14 @@ function RegisterPage() {
     });
   };
 
+  // Password validation function
   const validatePassword = (password: string): boolean => {
     const regex =
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     return regex.test(password);
   };
 
+  // Handle registration
   const handleRegister = async (e: FormEvent) => {
     e.preventDefault();
     if (!validatePassword(formData.password)) {
@@ -72,15 +104,6 @@ function RegisterPage() {
 
   return (
     <div className="relative flex items-center justify-center min-h-screen bg-pink-100 px-[1em]">
-      <video
-        autoPlay
-        loop
-        muted
-        className="absolute w-full h-full object-cover z-0"
-      >
-        <source src={rimonim} type="video/mp4" />
-        Your browser does not support the video tag.
-      </video>
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-sm relative z-10 dark:bg-gray-800">
         <h2 className="text-3xl font-bold mb-6 text-center text-pink-600">
           Register
@@ -89,44 +112,6 @@ function RegisterPage() {
         {success && <p className="text-green-500 mb-4">{success}</p>}
         {customError && <p className="text-red-500 mb-4">{customError}</p>}
         <form onSubmit={handleRegister} className="space-y-6" noValidate>
-          <div className="flex items-center border-b border-gray-300 py-2 relative">
-            <FaUser className="text-gray-400 mr-3" />
-            <input
-              type="text"
-              id="username"
-              name="username"
-              placeholder="Username"
-              className="w-full p-2 text-gray-700 dark:text-white dark:bg-gray-800 focus:outline-none"
-              required
-              value={formData.username}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="flex items-center border-b border-gray-300 py-2">
-            <FaLock className="text-gray-400 mr-3 animate-bounce" />
-            <div className="relative w-full">
-              <input
-                type={showPassword ? "text" : "password"}
-                id="password"
-                name="password"
-                placeholder="Password"
-                className="w-full p-2 text-gray-700 dark:text-white dark:bg-gray-800 focus:outline-none"
-                required
-              />
-              <div
-                className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
-                onClick={() =>
-                  setShowPassword((prevShowPassword) => !prevShowPassword)
-                }
-              >
-                {showPassword ? (
-                  <FaEyeSlash className="text-gray-500" />
-                ) : (
-                  <FaEye className="text-gray-500" />
-                )}
-              </div>
-            </div>
-          </div>
           <div className="flex items-center border-b border-gray-300 py-2 relative">
             <FaIdBadge className="text-gray-400 mr-3" />
             <input
@@ -166,6 +151,60 @@ function RegisterPage() {
               onChange={handleChange}
             />
           </div>
+          <div className="flex items-center border-b border-gray-300 py-2">
+            <FaLock className="text-gray-400 mr-3 animate-bounce" />
+            <div className="relative w-full">
+              <input
+                type={showPassword ? "text" : "password"}
+                id="password"
+                name="password"
+                placeholder="Password"
+                className="w-full p-2 text-gray-700 dark:text-white dark:bg-gray-800 focus:outline-none"
+                required
+              />
+              <div
+                className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
+                onClick={() =>
+                  setShowPassword((prevShowPassword) => !prevShowPassword)
+                }
+              >
+                {showPassword ? (
+                  <FaEyeSlash className="text-gray-500" />
+                ) : (
+                  <FaEye className="text-gray-500" />
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div className="flex items-center border-b border-gray-300 py-2 relative">
+            <FaPhone className="text-gray-400 mr-3" />
+            <input
+              type="text"
+              id="phoneNumber"
+              name="phoneNumber"
+              placeholder="Phone number"
+              className="w-full p-2 text-gray-700 dark:text-white dark:bg-gray-800 focus:outline-none"
+              required
+              value={formData.phoneNumber}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="flex items-center border-b border-gray-300 py-2 relative">
+            <FaImage className="text-gray-400 mr-3" />
+            <input
+              type="text"
+              id="profilePic"
+              name="profilePic"
+              placeholder="Profile Picture"
+              className="w-full p-2 text-gray-700 dark:text-white dark:bg-gray-800 focus:outline-none"
+              required
+              value={formData.phoneNumber}
+              onChange={handleChange}
+            />
+          </div>
+
           <button
             type="submit"
             className="w-full bg-gradient-to-r from-pink-500 to-pink-700 text-white py-2 rounded-full hover:from-pink-600 hover:to-pink-800 transition duration-300 transform hover:scale-105"
