@@ -28,23 +28,26 @@ function NavBar() {
             <FaRegUser size={32} />
           </button>
         </div>
-        <div className="absolute bottom-5 left-1/2 transform -translate-x-1/2 rounded-full border-4 border-black p-3 bg-white">
-          <GrMapLocation
-            onClick={() => navigate("/map")}
-            size={50}
-            className="text-blue-800"
-          />
+        <div
+          className="absolute bottom-5 left-1/2 transform -translate-x-1/2 rounded-full border-4 border-blue-800 p-3 bg-white cursor-pointer"
+          onClick={() => navigate("/map")}
+        >
+          <GrMapLocation size={50} className="text-blue-800" />
         </div>
         <div className="w-32 flex justify-between pl-3">
-          <button className="text-white hover:text-gray-300">
-            <FaRegBookmark
-              size={32}
-              onClick={() => {
-                navigate("favourites");
-              }}
-            />
+          <button
+            className="text-white hover:text-gray-300"
+            onClick={() => {
+              navigate("favourites");
+            }}
+          >
+            <FaRegBookmark size={32} />
           </button>
-          <button>
+          <button
+            onClick={() => {
+              navigate("/instructions");
+            }}
+          >
             <img
               className="w-12 h-auto rounded-full "
               src="../src/images/pikud-haOref-logo.png"

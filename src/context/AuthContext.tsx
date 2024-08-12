@@ -89,31 +89,6 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   }
 
-  // async function createLoggedInUser(token: string) {
-  //   if (token) {
-  //     try {
-  //       const { userId }: any = formatJWTTokenToUser(token);
-  //       const { data } = await api.get(`/auth/${userId}`);
-  //       const { user } = data;
-
-  //       setLoggedInUser({
-  //         userId: user._id,
-  //         firstName: user.firstName,
-  //         lastName: user.lastName,
-  //         email: user.email,
-  //         phoneNumber: user.phoneNumber,
-  //         profilePic: user.profilePic,
-  //         safeRooms: user.safeRooms,
-  //         favorites: user.favorites,
-  //         createdAt: user.createdAt,
-  //       });
-  //     } catch (error) {
-  //       console.error("Error fetching user data:", error);
-  //       logout(); // Log out user if there's an error fetching data
-  //     }
-  //   }
-  // }
-
   const login = async (token: string) => {
     localStorage.setItem("token", token);
     try {
@@ -154,11 +129,15 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   };
 
   const getFavById = async (userId: string) => {
-    if (!userId) return;
-    const { data } = await api.get(`/room/user/fav/${userId}`);
-    const { favRooms } = data;
+    try {
+      if (!userId) return;
+      const { data } = await api.get(`/room/user/fav/${userId}`);
+      const { favRooms } = data;
 
-    setFavRooms(favRooms);
+      setFavRooms(favRooms);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (

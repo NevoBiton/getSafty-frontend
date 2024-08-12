@@ -1,6 +1,7 @@
 import React, { useContext, useEffect } from "react";
-import { AuthContext } from "@/context/AuthContext"; // Adjust the path based on your project structure
+import { AuthContext } from "@/context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar";
 import {
   Carousel,
   CarouselContent,
@@ -34,16 +35,22 @@ function MyProfile() {
     return null; // Redirect handled in useEffect
   }
 
+  const initials = `${loggedInUser.firstName[0]}${loggedInUser.lastName[0]}`;
+
   return (
     <div className="w-full h-[88dvh] p-6 bg-gradient-to-br from-blue-50 to-gray-100">
       <div className="max-w-4xl mx-auto bg-white p-10 rounded-lg shadow-lg border-t-8 border-orange-500">
         <h2 className="text-4xl font-bold mb-8 text-blue-800">My Profile</h2>
         <div className="flex items-center mb-8">
-          <img
-            src={loggedInUser.profilePic}
-            alt={`${loggedInUser.firstName} ${loggedInUser.lastName}`}
-            className="w-28 h-28 rounded-full object-cover mr-8 shadow-md border-4 border-orange-500"
-          />
+          <Avatar className="w-28 h-28 rounded-full mr-8 shadow-md border-4 border-orange-500">
+            <AvatarImage
+              src={loggedInUser.profilePic}
+              alt={`${loggedInUser.firstName} ${loggedInUser.lastName}`}
+            />
+            <AvatarFallback className="bg-orange-600 text-white font-bold text-2xl">
+              {initials}
+            </AvatarFallback>
+          </Avatar>
           <div>
             <p className="text-xl font-medium text-gray-800 mb-2">
               <span className="font-semibold text-orange-600">Name:</span>{" "}

@@ -5,7 +5,6 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
-
 } from "../components/ui/dialog";
 import { Button } from "./ui/button";
 import { Autocomplete } from "@react-google-maps/api";
@@ -116,8 +115,6 @@ const AddRoomDialog: React.FC<AddRoomDialogProps> = ({ isOpen, onClose }) => {
       isPublic: formData.get("isPublic") === "on",
       ownerId: loggedInUser ? loggedInUser._id : null,
     };
-
-    console.log(roomData);
 
     try {
       const { data: newRoom } = await api.post("/room", roomData, {
