@@ -11,10 +11,11 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import RoomsList from "./costum/RoomsList";
-import { LogOut } from "lucide-react";
+import { LogOut, PlusCircle } from "lucide-react";
 import { Separator } from "./ui/separator";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "@/context/AuthContext";
+import AddShelterDrawer from "./costum/AddShelterDrawer";
 
 interface DrawerCompProps {
   openDrawer: boolean;
@@ -23,6 +24,7 @@ interface DrawerCompProps {
 
 function DrawerComp({ openDrawer, setOpenDrawer }: DrawerCompProps) {
   const authContext = useContext(AuthContext);
+  const [addShelterDialogOpen, setAddShelterDialogOpen] = useState(false);
 
   if (!authContext) {
     throw new Error("RegisterPage must be used within an AuthProvider");
@@ -40,10 +42,17 @@ function DrawerComp({ openDrawer, setOpenDrawer }: DrawerCompProps) {
             <SheetTitle className="text-2xl font-bold">Menu</SheetTitle>
           </SheetHeader>
 
-          <Accordion type="single" collapsible className="mb-6">
-            <AccordionItem value="item-1" className="border-t border-gray-200">
-              <AccordionTrigger className="text-lg font-medium bg-gradient-to-r from-blue-300 to-blue-400 text-gray-800 py-2 px-3 rounded-md hover:bg-gradient-to-r hover:from-blue-400 hover:to-blue-500 transition">
-                My Shelters
+          <Accordion type="single" collapsible>
+            <AccordionItem value="item-1">
+              <AccordionTrigger className="text-xl relative">
+                <div>My Shelters</div>
+                <button
+                  className="absolute right-8"
+                  onClick={() => setAddShelterDialogOpen(true)}
+                >
+                  <PlusCircle size={20} />
+                </button>
+
               </AccordionTrigger>
               <AccordionContent className="p-3 bg-gray-50 text-gray-700 rounded-md mt-2">
                 <RoomsList />
@@ -71,6 +80,13 @@ function DrawerComp({ openDrawer, setOpenDrawer }: DrawerCompProps) {
           )}
         </SheetContent>
       </Sheet>
+
+      {addShelterDialogOpen && (
+        <AddShelterDrawer
+          isOpen={addShelterDialogOpen}
+          onClose={() => setAddShelterDialogOpen(false)}
+        />
+      )}
     </>
   );
 }

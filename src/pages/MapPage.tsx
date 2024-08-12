@@ -6,7 +6,6 @@ import {
   Autocomplete,
 } from "@react-google-maps/api";
 import MyLocationBtn from "../components/MyLocationBtn";
-import AddRoomDialog from "@/components/AddRoomDialog";
 import { AuthContext, IRoom } from "@/context/AuthContext";
 import ColorMap from "@/components/ColorMap";
 import FilterBtn from "@/components/FilterBtn";
@@ -63,12 +62,12 @@ function MapPage() {
   const [location, setLocation] = useState<Location | null>(null);
   const [currentLocation, setCurrentLocaton] = useState<Location | null>(null);
   const [shelters, setShelters] = useState<IRoom[]>([]);
-  const [selectedRoom, setSelectedRoom] = useState<IRoom | null>(null);
-  const [roomModalOpen, setRoomModalOpen] = useState(false);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [searchParams, setSearchParams] = useSearchParams();
-  const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
-  const inputRef = useRef<HTMLInputElement | null>(null);
+  const [selectedRoom, setSelectedRoom] = useState<IRoom | null>(null); // State to manage selected room
+  const [roomModalOpen, setRoomModalOpen] = useState(false); // State to manage RoomModal visibility
+  const [searchParams, setSearchParams] = useSearchParams(); // Get and set search params
+  const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null); // Ref for the autocomplete input
+  const inputRef = useRef<HTMLInputElement | null>(null); // Ref for the search input
+
 
   const nav = useNavigate();
 
@@ -209,10 +208,7 @@ function MapPage() {
   return (
     <div className="flex flex-col w-full h-screen">
       <CountDown location={location} />
-      <AddRoomDialog
-        isOpen={isDialogOpen}
-        onClose={() => setIsDialogOpen(false)}
-      />
+
       {isLoaded && location ? (
         <div className="flex-1">
           <GoogleMap
