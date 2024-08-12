@@ -15,6 +15,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import { Checkbox } from "@radix-ui/react-checkbox";
+import { useToast } from "@/components/ui/use-toast";
 import { Button } from "../ui/button";
 
 interface EditRoomDialogProps {
@@ -28,6 +29,7 @@ function EditRoomDialog({ isOpen, onClose }: EditRoomDialogProps) {
   const [room, setRoom] = useState<IRoom>();
   const [editedRoom, setEditedRoom] = useState<Partial<IRoom>>({});
   const authContext = useContext(AuthContext);
+  const { toast } = useToast();
 
   if (!authContext) {
     throw new Error("RegisterPage must be used within an AuthProvider");
@@ -78,9 +80,21 @@ function EditRoomDialog({ isOpen, onClose }: EditRoomDialogProps) {
       setUserRooms((prev: IRoom[]): IRoom[] =>
         prev.map((room) => (room._id === updatedRoom._id ? updatedRoom : room))
       );
+      toast({
+        title: "Room edited successfully.",
+        description: "Your changes saved.",
+        className: "bg-green-400 text-white border-none",
+        duration: 3000,
+      });
       onClose();
       // Optionally, refresh the room data or navigate
     } catch (err) {
+      toast({
+        title: "Error updating room",
+        description: "Please check your fields again.",
+        className: "bg-red-500 text-white border-none",
+        duration: 3000,
+      });
       console.error("Error updating room:", err);
     }
   };

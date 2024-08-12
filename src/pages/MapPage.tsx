@@ -271,12 +271,28 @@ function MapPage() {
               />
             </Autocomplete>
           </div>
+          {/* <MarkerF
+            key={1}
+            position={new google.maps.LatLng(location.lat, location.lng)}
+            icon={{
+              url: pinIcons.blue,
+              scaledSize: new google.maps.Size(25, 25),
+            }}
+          /> */}
           <MarkerF
             key={1}
             position={new google.maps.LatLng(location.lat, location.lng)}
             icon={{
               url: pinIcons.blue,
               scaledSize: new google.maps.Size(25, 25),
+              labelOrigin: new google.maps.Point(12.5, -20), // Adjust the label position above the marker
+            }}
+            label={{
+              text: "Your Location", // The text for the label
+              color: "#000", // Text color
+              fontSize: "14px", // Text size
+              fontWeight: "bold", // Font weight
+              className: "marker-label", // Optional: add a custom class for further styling
             }}
           />
           {shelters.map((shelter: IRoom, index) =>
