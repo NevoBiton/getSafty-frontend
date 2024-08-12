@@ -77,7 +77,7 @@ function MapPage() {
         const response = await api.get(
           `http://localhost:3000/api/room?${queryString}`
         );
-        console.log("Shelters Data:", response.data.rooms);
+        // console.log("Shelters Data:", response.data.rooms);
         setShelters(response.data.rooms);
       } catch (err) {
         console.log(err);
