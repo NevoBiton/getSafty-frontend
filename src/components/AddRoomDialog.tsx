@@ -379,7 +379,8 @@ const AddRoomDialog: React.FC<AddRoomDialogProps> = ({ isOpen, onClose }) => {
     if (!addressComponents.street || !addressComponents.number) {
       toast({
         title: "Invalid Address",
-        description: "Please provide a valid address with both street and number.",
+        description:
+          "Please provide a valid address with both street and number.",
         className: "bg-yellow-500 text-white",
         duration: 3000,
       });
@@ -392,7 +393,8 @@ const AddRoomDialog: React.FC<AddRoomDialogProps> = ({ isOpen, onClose }) => {
     if (!location) {
       toast({
         title: "Geocode Error",
-        description: "Failed to geocode address. Please check the address and try again.",
+        description:
+          "Failed to geocode address. Please check the address and try again.",
         className: "bg-red-500 text-white",
         duration: 3000,
       });
@@ -597,4 +599,3 @@ const AddRoomDialog: React.FC<AddRoomDialogProps> = ({ isOpen, onClose }) => {
 };
 
 export default AddRoomDialog;
-
