@@ -52,7 +52,7 @@ export interface AuthContextProps {
   login: (token: string) => Promise<void>;
   logout: () => void;
   userRooms: IRoom[] | null;
-  setUserRooms: React.Dispatch<React.SetStateAction<IRoom[] | null>>;
+  setUserRooms: React.Dispatch<React.SetStateAction<IRoom[] | null>>; // Correctly typed
   favRooms: IRoom[] | null;
   setFavRooms: React.Dispatch<React.SetStateAction<IRoom[] | null>>;
 }
