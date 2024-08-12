@@ -62,12 +62,9 @@ function MapPage() {
   const [location, setLocation] = useState<Location | null>(null);
   const [currentLocation, setCurrentLocaton] = useState<Location | null>(null);
   const [shelters, setShelters] = useState<IRoom[]>([]);
-  const [selectedRoom, setSelectedRoom] = useState<IRoom | null>(null); // State to manage selected room
-  const [roomModalOpen, setRoomModalOpen] = useState(false); // State to manage RoomModal visibility
   const [searchParams, setSearchParams] = useSearchParams(); // Get and set search params
   const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null); // Ref for the autocomplete input
   const inputRef = useRef<HTMLInputElement | null>(null); // Ref for the search input
-
 
   const nav = useNavigate();
 
@@ -76,8 +73,6 @@ function MapPage() {
       if (!loc || !map) return;
       try {
         const queryString = searchParams.toString();
-        console.log(queryString);
-
         const response = await api.get(
           `http://localhost:3000/api/room?${queryString}`
         );

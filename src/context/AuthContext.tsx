@@ -51,7 +51,7 @@ export interface AuthContextProps {
   loggedInUser: User | null;
   login: (token: string) => Promise<void>;
   logout: () => void;
-  userRooms: IRoom[] | null;
+  userRooms: IRoom[] | [];
   setUserRooms: React.Dispatch<React.SetStateAction<IRoom[]>>; // Correctly typed
   favRooms: IRoom[] | null;
   setFavRooms: React.Dispatch<React.SetStateAction<IRoom[] | null>>;
@@ -67,7 +67,7 @@ interface AuthProviderProps {
 
 const AuthProvider = ({ children }: AuthProviderProps) => {
   const [loggedInUser, setLoggedInUser] = useState<User | null>(null);
-  const [userRooms, setUserRooms] = useState<IRoom[] | null>(null);
+  const [userRooms, setUserRooms] = useState<IRoom[]>([]);
   const [favRooms, setFavRooms] = useState<IRoom[] | null>(null);
   const navigate = useNavigate();
 
