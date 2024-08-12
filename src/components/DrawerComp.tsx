@@ -39,7 +39,9 @@ function DrawerComp({ openDrawer, setOpenDrawer }: DrawerCompProps) {
 
           <Accordion type="single" collapsible>
             <AccordionItem value="item-1">
-              <AccordionTrigger>My Rooms</AccordionTrigger>
+              <AccordionTrigger className="text-xl">
+                My Shelters
+              </AccordionTrigger>
               <AccordionContent>
                 <RoomsList />
               </AccordionContent>
@@ -47,18 +49,24 @@ function DrawerComp({ openDrawer, setOpenDrawer }: DrawerCompProps) {
           </Accordion>
 
           {loggedInUser && (
-            <button
-              className="w-full flex justify-between pr-3 font-semibold py-4"
-              onClick={() => {
-                logout();
-                setOpenDrawer(!openDrawer);
-              }}
-            >
-              <span>Log Out</span>
-              <LogOut />
-            </button>
+            <>
+              <button className="w-full flex justify-between pr-3 font-semibold py-4 text-xl">
+                <span>Settings</span>
+              </button>
+              <Separator />
+              <button
+                className="w-full flex justify-between pr-3 font-semibold py-4 text-xl"
+                onClick={() => {
+                  logout();
+                  setOpenDrawer(!openDrawer);
+                }}
+              >
+                <span>Log Out</span>
+                <LogOut />
+              </button>
+            </>
           )}
-          <Separator />
+          {/* <Separator /> */}
         </SheetContent>
       </Sheet>
     </>
