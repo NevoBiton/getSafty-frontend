@@ -4,15 +4,15 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import { GrMapLocation } from "react-icons/gr";
 import { useNavigate } from "react-router-dom";
 import DrawerComp from "./DrawerComp";
+
 function NavBar() {
   const [openDrawer, setOpenDrawer] = useState(false);
-
   const navigate = useNavigate();
 
   return (
     <>
-      <div className="bg-blue-800 flex justify-between p-4 relative">
-        <div className="w-28 sm:w-36 flex justify-between pl-3">
+      <div className="bg-blue-800 flex justify-between items-center p-4 fixed bottom-0 left-0 right-0 z-50 h-[10%]">
+        <div className="flex justify-between w-1/3 sm:w-1/4">
           <button
             onClick={() => setOpenDrawer(!openDrawer)}
             className="text-white hover:text-gray-300"
@@ -20,36 +20,30 @@ function NavBar() {
             <GiHamburgerMenu size={32} />
           </button>
           <button
-            className="text-white hovser:text-gray-300"
-            onClick={() => {
-              navigate("/myProfile");
-            }}
+            className="text-white hover:text-gray-300"
+            onClick={() => navigate("/myProfile")}
           >
             <FaRegUser size={32} />
           </button>
         </div>
+
         <div
-          className="absolute bottom-5 left-1/2 transform -translate-x-1/2 rounded-full border-4 border-blue-800 p-3 bg-white cursor-pointer"
+          className="flex justify-center items-center mt-10 w-20 h-20 bg-white p-2 rounded-full border-4 border-blue-800 cursor-pointer transform -translate-y-1/2 "
           onClick={() => navigate("/map")}
         >
-          <GrMapLocation size={50} className="text-blue-800" />
+          <GrMapLocation size={32} className="text-blue-800" />
         </div>
-        <div className="w-32 flex justify-between pl-3">
+
+        <div className="flex justify-between w-1/3 sm:w-1/4">
           <button
             className="text-white hover:text-gray-300"
-            onClick={() => {
-              navigate("favourites");
-            }}
+            onClick={() => navigate("favourites")}
           >
             <FaRegBookmark size={32} />
           </button>
-          <button
-            onClick={() => {
-              navigate("/instructions");
-            }}
-          >
+          <button onClick={() => navigate("/instructions")}>
             <img
-              className="w-12 h-auto rounded-full "
+              className="w-10 h-auto rounded-full"
               src="../src/images/pikud-haOref-logo.png"
               alt="Pikud HaOref Logo"
             />
