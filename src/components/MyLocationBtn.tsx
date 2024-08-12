@@ -8,7 +8,7 @@ function MyLocationBtn({ centerMap }: MyLocationBtnProps) {
   return (
     <button
       onClick={centerMap}
-      className="absolute bottom-20 rounded-full right-10 z-10 p-2 bg-white border-none rounded shadow-lg cursor-pointer"
+      className="absolute bottom-20 right-10 z-10 p-2 bg-white border-none rounded shadow-lg cursor-pointer"
     >
       <FaLocationArrow size={20} className="text-blue-500" />
     </button>
