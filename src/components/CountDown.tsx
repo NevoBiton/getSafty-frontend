@@ -47,13 +47,17 @@ const CountDown: React.FC<CountDownProps> = ({ location }) => {
   }, [location]);
 
   return (
-    <div className="absolute top-3 right-3 p-2 bg-white/90 rounded-md shadow-sm z-10 md:top-5 md:right-5 md:p-3">
+    <div className="absolute  -right-1 mt-56  p-2 bg-red-600/90 text-white rounded-md shadow-sm z-10  md:right-5 md:p-3">
       {zoneName && countdown !== null ? (
         <div>
           {/* <h3 className="text-sm font-semibold md:text-base">Nearest Zone: {zoneName}</h3> */}
           <div className="flex gap-1 items-center text-xs md:text-sm">
-            <p>Countdown: {countdown} seconds</p>
-            <Clock className="w-2.5 h-2.5 md:w-3 md:h-3" />
+            <p>
+              Alert Zone:
+              <br />
+              {countdown} seconds
+            </p>
+            <Clock className="w-2.5 h-2.5 md:w-3 md:h-3 self-end" />
           </div>
         </div>
       ) : (

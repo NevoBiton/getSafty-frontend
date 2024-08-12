@@ -80,15 +80,16 @@ function FilterBtn({ loc }: FilterBtnProps) {
   return (
     <div className="relative z-10">
       <div
-        className={`absolute top-10 left-9 text-white bg-blue-500 rounded-lg shadow-md transition-all duration-300 flex items-center p-2 cursor-pointer`}
+        className={`absolute top-8 left-9 text-white bg-blue-500 rounded-lg shadow-md transition-all duration-300 flex items-center p-2 cursor-pointer`}
         onClick={handleFilterClick}
       >
         <Filter /> {/* lucide-react Filter icon */}
       </div>
 
       <div
-        className={`absolute top-20 left-9 bg-white rounded-lg shadow-lg p-4 transition-all duration-300 transform ${isOpen ? "opacity-100 scale-100" : "opacity-0 scale-95"
-          } ${isOpen ? "pointer-events-auto" : "pointer-events-none"}`}
+        className={`absolute top-20 left-9 bg-white rounded-lg shadow-lg p-4 transition-all duration-300 transform ${
+          isOpen ? "opacity-100 scale-100" : "opacity-0 scale-95"
+        } ${isOpen ? "pointer-events-auto" : "pointer-events-none"}`}
         style={{ width: "300px" }}
       >
         <form onSubmit={handleSubmit}>

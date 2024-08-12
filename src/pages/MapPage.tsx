@@ -23,8 +23,8 @@ interface Location {
 
 const libraries: "places"[] = ["places"];
 const containerStyle = {
-  width: "100vw",
-  height: "85vh",
+  width: "100%",
+  height: "calc(100vh - 0px)",
 };
 
 const mapOptions = {
@@ -33,7 +33,8 @@ const mapOptions = {
   fullscreenControl: false,
   streetViewControl: false,
   mapTypeControl: false,
-  clickableIcons: false, // Disable clicking on places other than the bomb shelters
+  clickableIcons: false,
+  // styles: darkModeStyle,
 };
 
 const pinIcons = {
@@ -52,6 +53,7 @@ function MapPage() {
       navigate("/");
     }
   }, []);
+
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: "AIzaSyDwY1nKLe_qB7XyA6_8uBsBkOG_uNdtxgg", // Use environment variable for API key
     libraries,
@@ -61,21 +63,22 @@ function MapPage() {
   const [location, setLocation] = useState<Location | null>(null);
   const [currentLocation, setCurrentLocaton] = useState<Location | null>(null);
   const [shelters, setShelters] = useState<IRoom[]>([]);
-  const [selectedRoom, setSelectedRoom] = useState<IRoom | null>(null); // State to manage selected room
-  const [roomModalOpen, setRoomModalOpen] = useState(false); // State to manage RoomModal visibility
+  const [selectedRoom, setSelectedRoom] = useState<IRoom | null>(null);
+  const [roomModalOpen, setRoomModalOpen] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [searchParams, setSearchParams] = useSearchParams(); // Get and set search params
-  const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null); // Ref for the autocomplete input
-  const inputRef = useRef<HTMLInputElement | null>(null); // Ref for the search input
+  const [searchParams, setSearchParams] = useSearchParams();
+  const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
   const nav = useNavigate();
-  // Function to fetch shelters based on location and search parameters
+
   const getShelters = useCallback(
     async (loc: Location) => {
       if (!loc || !map) return;
       try {
-        // Prepare the query string based on the search params
         const queryString = searchParams.toString();
+        console.log(queryString);
+
         const response = await api.get(
           `http://localhost:3000/api/room?${queryString}`
         );
@@ -86,8 +89,11 @@ function MapPage() {
     },
     [map, searchParams]
   );
-
-  // Function to center the map to the current location
+  useEffect(() => {
+    if (location) {
+      getShelters(location);
+    }
+  }, [location, map, searchParams, getShelters]);
   const centerMap = useCallback(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -97,7 +103,6 @@ function MapPage() {
             lng: position.coords.longitude,
           };
 
-          // Center the map immediately
           if (map) {
             map.panTo(
               new google.maps.LatLng(
@@ -111,7 +116,6 @@ function MapPage() {
             inputRef.current.value = "";
           }
 
-          // Set state and fetch shelters afterward
           setLocation(NewcurrentLocation);
           setCurrentLocaton(NewcurrentLocation);
           getShelters(NewcurrentLocation);
@@ -119,7 +123,6 @@ function MapPage() {
         (error) => {
           console.error("Error obtaining location: ", error);
 
-          // Fallback to a default location
           const defaultLocation: Location = { lat: 0, lng: 0 };
           if (map) {
             map.panTo(
@@ -130,9 +133,9 @@ function MapPage() {
           setLocation(defaultLocation);
         },
         {
-          enableHighAccuracy: true, // Request higher accuracy
-          timeout: 5000, // Reduce timeout for quicker fallback
-          maximumAge: 10000, // Use cached location if available
+          enableHighAccuracy: true,
+          timeout: 5000,
+          maximumAge: 10000,
         }
       );
     } else {
@@ -140,7 +143,6 @@ function MapPage() {
     }
   }, [map, getShelters]);
 
-  // UseEffect to get the user's current location
   useEffect(() => {
     if (navigator.geolocation) {
       const watchId = navigator.geolocation.watchPosition(
@@ -172,7 +174,6 @@ function MapPage() {
     }
   }, [map]);
 
-  // Function to handle marker click
   const getPinColor = useCallback((shelter: IRoom) => {
     if (!shelter.available) {
       return pinIcons.red;
@@ -180,7 +181,6 @@ function MapPage() {
     return shelter.isPublic ? pinIcons.orange : pinIcons.green;
   }, []);
 
-  // Function to handle place selection from the autocomplete dropdown
   const onPlaceSelected = () => {
     if (autocompleteRef.current && map) {
       const place = autocompleteRef.current.getPlace();
@@ -190,122 +190,89 @@ function MapPage() {
           lng: place.geometry.location.lng(),
         };
 
-        // Update the location state
         setLocation(newLocation);
 
-        // Update the search parameters with the new lat and lng
         setSearchParams({
-          ...Object.fromEntries(searchParams.entries()), // Keep existing search params
+          ...Object.fromEntries(searchParams.entries()),
           lat: newLocation.lat.toString(),
           lng: newLocation.lng.toString(),
         });
 
-        // Center the map on the new location
         map.panTo(new google.maps.LatLng(newLocation.lat, newLocation.lng));
-        map.setZoom(15); // Adjust zoom level as needed
+        map.setZoom(15);
 
-        // Fetch shelters near the new location
         getShelters(newLocation);
       }
     }
   };
 
-  const handleMarkerClick = useCallback((shelter: IRoom) => {
-    setSelectedRoom(shelter); // Set the selected room
-    setRoomModalOpen(true); // Open the RoomModal
-    // Remove any logic here that centers or pans the map
-  }, []);
-
   return (
-    <div>
+    <div className="flex flex-col w-full h-screen">
       <CountDown location={location} />
-      <button onClick={() => setIsDialogOpen(true)}>TEST</button>
       <AddRoomDialog
         isOpen={isDialogOpen}
         onClose={() => setIsDialogOpen(false)}
       />
       {isLoaded && location ? (
-        <GoogleMap
-          mapContainerStyle={containerStyle}
-          center={
-            location
-              ? new google.maps.LatLng(location.lat, location.lng)
-              : undefined
-          }
-          zoom={15}
-          onLoad={setMap}
-          options={mapOptions}
-        >
-          {/* Autocomplete Input */}
-          <div
-            style={{
-              position: "absolute",
-              top: "10px",
-              left: "50%",
-              transform: "translateX(-50%)",
-              zIndex: 10,
-            }}
+        <div className="flex-1">
+          <GoogleMap
+            mapContainerStyle={containerStyle}
+            center={
+              location
+                ? new google.maps.LatLng(location.lat, location.lng)
+                : undefined
+            }
+            zoom={15}
+            onLoad={setMap}
+            options={mapOptions}
           >
-            <Autocomplete
-              onLoad={(autocomplete) => {
-                autocompleteRef.current = autocomplete;
+            <div className="absolute top-3 left-1/2 transform -translate-x-1/2 z-10 w-11/12 sm:w-3/4 md:w-1/2 lg:w-1/3">
+              <Autocomplete
+                className="max-w-[50%] min-w-[50%] mx-auto mt-5"
+                onLoad={(autocomplete) => {
+                  autocompleteRef.current = autocomplete;
+                }}
+                onPlaceChanged={onPlaceSelected}
+              >
+                <input
+                  type="text"
+                  ref={inputRef}
+                  placeholder="Search for a place"
+                  className="w-full h-10 px-3 text-sm rounded-md shadow-lg outline-none border border-gray-200"
+                />
+              </Autocomplete>
+            </div>
+            <MarkerF
+              key={1}
+              position={new google.maps.LatLng(location.lat, location.lng)}
+              icon={{
+                url: pinIcons.blue,
+                scaledSize: new google.maps.Size(25, 25),
               }}
-              onPlaceChanged={onPlaceSelected}
-            >
-              <input
-                type="text"
-                ref={inputRef}
-                placeholder="Search for a place"
-                style={{
-                  boxSizing: `border-box`,
-                  border: `1px solid transparent`,
-                  width: `240px`,
-                  height: `40px`,
-                  padding: `0 12px`,
-                  borderRadius: `3px`,
-                  boxShadow: `0 2px 6px rgba(0, 0, 0, 0.3)`,
-                  fontSize: `14px`,
-                  outline: `none`,
-                  textOverflow: `ellipses`,
-                }}
-              />
-            </Autocomplete>
-          </div>
-          <MarkerF
-            key={1}
-            position={new google.maps.LatLng(location.lat, location.lng)}
-            icon={{
-              url: pinIcons.blue,
-              scaledSize: new google.maps.Size(25, 25),
-            }}
-          />
-          {shelters.map((shelter: IRoom, index) =>
-            shelter.location ? (
-              <MarkerF
-                key={`${shelter._id}${index}`}
-                position={{
-                  lat: shelter.location.lat,
-                  lng: shelter.location.lng,
-                }}
-                icon={{
-                  url: getPinColor(shelter),
-                  scaledSize: new google.maps.Size(25, 25),
-                }}
-                onClick={() => {
-                  nav(`/map/${shelter._id}`);
-                }}
-              />
-            ) : null
-          )}
-          <FilterBtn loc={location} />
-          <MyLocationBtn centerMap={centerMap} />
-          <ColorMap />
-          <button onClick={() => setIsDialogOpen(true)}>TEST</button>
-          <AddRoomDialog
-            isOpen={isDialogOpen}
-            onClose={() => setIsDialogOpen(false)}
-          />
-        </GoogleMap>
+            />
+            {shelters.map((shelter: IRoom, index) =>
+              shelter.location ? (
+                <MarkerF
+                  key={`${shelter._id}${index}`}
+                  position={{
+                    lat: shelter.location.lat,
+                    lng: shelter.location.lng,
+                  }}
+                  icon={{
+                    url: getPinColor(shelter),
+                    scaledSize: new google.maps.Size(25, 25),
+                  }}
+                  onClick={() => {
+                    nav(`/map/${shelter._id}`);
+                  }}
+                />
+              ) : null
+            )}
+            <FilterBtn loc={location} />
+            <MyLocationBtn centerMap={centerMap} />
+            <ColorMap />
+          </GoogleMap>
+        </div>
       ) : (
         <Loader />
       )}
