@@ -109,10 +109,6 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       });
       fetchRooms(user._id);
       getFavById(user._id);
-      toast({
-        title: "Logged in successfully",
-        description: `${user.firstName} ${user.lastName}`,
-      });
     } catch (error) {
       toast({
         title: "Failed to Login",

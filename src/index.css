@@ -1,3 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.marker-label {
+    @apply bg-white bg-opacity-80 px-2 py-1 rounded shadow-md text-center;
+}

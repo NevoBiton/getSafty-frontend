@@ -15,7 +15,7 @@ function LoginPage() {
   const authContext = useContext(AuthContext);
 
   if (!authContext) {
-    throw new Error("RegisterPage must be used within an AuthProvider");
+    throw new Error("LoginPage must be used within an AuthProvider");
   }
   const { loggedInUser, login } = authContext;
 
@@ -49,10 +49,13 @@ function LoginPage() {
   };
 
   return (
-    <div className="relative flex items-center justify-center min-h-screen bg-pink-100 px-[1em]">
-      <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg w-full max-w-sm relative z-10">
-        <h2 className="text-3xl font-bold mb-6 text-center text-pink-600">
-          Login
+    <div className="relative flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-900 via-blue-600 to-blue-400 text-white px-4 sm:px-6 lg:px-8">
+      {/* Background Overlay */}
+      <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-blue-300 to-blue-600 opacity-20 z-0"></div>
+
+      <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg w-full max-w-sm relative z-10 transform transition-transform hover:scale-105">
+        <h2 className="text-4xl font-bold mb-6 text-center text-blue-600 dark:text-blue-400">
+          Login to GetSafety
         </h2>
         <form onSubmit={handleLogin} className="space-y-6">
           <div className="flex items-center border-b border-gray-300 py-2">
@@ -93,19 +96,18 @@ function LoginPage() {
           </div>
           <button
             type="submit"
-            className="w-full bg-gradient-to-r from-pink-500 to-pink-700 text-white py-2 rounded-full hover:from-pink-600 hover:to-pink-800 transition duration-300 transform hover:scale-105"
+            className="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white py-3 rounded-full hover:from-orange-600 hover:to-orange-700 transition duration-300 transform hover:scale-105"
           >
             Login
           </button>
         </form>
-        <p className="mt-4 text-gray-600 dark:text-gray-300">
+        <p className="mt-6 text-gray-600 dark:text-gray-300 text-center">
           Don't have an account?{" "}
-          <Link to="/register" className="text-pink-600 hover:underline">
+          <Link to="/register" className="text-orange-600 hover:underline">
             Register here
           </Link>
         </p>
       </div>
-      <div className="absolute top-0 left-0 w-full h-full bg-black opacity-25 z-0"></div>
     </div>
   );
 }
