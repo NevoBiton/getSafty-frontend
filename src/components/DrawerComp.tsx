@@ -29,7 +29,7 @@ function DrawerComp({ openDrawer, setOpenDrawer }: DrawerCompProps) {
   if (!authContext) {
     throw new Error("RegisterPage must be used within an AuthProvider");
   }
-  const { loggedInUser, logout } = authContext;
+  const { loggedInUser, logout, setUserRooms } = authContext;
 
   return (
     <>
@@ -52,7 +52,6 @@ function DrawerComp({ openDrawer, setOpenDrawer }: DrawerCompProps) {
                 >
                   <PlusCircle size={20} />
                 </button>
-
               </AccordionTrigger>
               <AccordionContent className="p-3 bg-gray-50 text-gray-700 rounded-md mt-2">
                 <RoomsList />
@@ -83,6 +82,7 @@ function DrawerComp({ openDrawer, setOpenDrawer }: DrawerCompProps) {
 
       {addShelterDialogOpen && (
         <AddShelterDrawer
+          setUserRooms={setUserRooms}
           isOpen={addShelterDialogOpen}
           onClose={() => setAddShelterDialogOpen(false)}
         />

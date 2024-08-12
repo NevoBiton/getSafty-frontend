@@ -13,13 +13,19 @@ import { Autocomplete } from "@react-google-maps/api";
 import { AuthContext, IRoom } from "@/context/AuthContext";
 import api from "@/services/api.services"; // Import your custom api instance
 import { ScrollArea } from "../ui/scroll-area";
+import { toast } from "../ui/use-toast";
 
 interface AddRoomDialogProps {
   isOpen: boolean;
   onClose: () => void;
+  setUserRooms: React.Dispatch<React.SetStateAction<IRoom[]>>;
 }
 
-function AddShelterDrawer({ isOpen, onClose }: AddRoomDialogProps) {
+function AddShelterDrawer({
+  isOpen,
+  onClose,
+  setUserRooms,
+}: AddRoomDialogProps) {
   const formRef = useRef<HTMLFormElement>(null);
   const [autocomplete, setAutocomplete] =
     useState<google.maps.places.Autocomplete | null>(null);
@@ -29,7 +35,7 @@ function AddShelterDrawer({ isOpen, onClose }: AddRoomDialogProps) {
     number: "",
   });
 
-  const { loggedInUser, setUserRooms } = useContext(AuthContext)!;
+  const { loggedInUser } = useContext(AuthContext)!;
 
   const onLoad = (autocompleteInstance: google.maps.places.Autocomplete) => {
     setAutocomplete(autocompleteInstance);
@@ -122,12 +128,18 @@ function AddShelterDrawer({ isOpen, onClose }: AddRoomDialogProps) {
     };
 
     try {
-      const { data: newRoom } = await api.post("/room", roomData, {
+      const { data } = await api.post("/room", roomData, {
         headers: {
           "Content-Type": "application/json",
         },
       });
-      console.log("Room added successfully");
+      toast({
+        title: "Shelter added successfully.",
+        description: "Your changes saved.",
+        className: "bg-green-400 text-white border-none",
+        duration: 3000,
+      });
+      const newRoom = data.room;
       setUserRooms((prevUserRooms: IRoom[]): IRoom[] => [
         ...prevUserRooms,
         newRoom,
@@ -141,9 +153,9 @@ function AddShelterDrawer({ isOpen, onClose }: AddRoomDialogProps) {
 
   return (
     <Drawer open={isOpen} onOpenChange={onClose}>
-      <DrawerContent className="h-full mx-auto px-6 rounded-lg bg-white shadow-lg">
+      <DrawerContent className="h-[95%] mx-auto px-6 rounded-lg bg-white shadow-lg">
         <ScrollArea>
-          <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
+          <form ref={formRef} onSubmit={handleSubmit} className="">
             <DrawerHeader>
               <DrawerTitle className="text-2xl font-semibold text-gray-900">
                 Add Shelter
@@ -151,27 +163,27 @@ function AddShelterDrawer({ isOpen, onClose }: AddRoomDialogProps) {
             </DrawerHeader>
             <DrawerDescription className="space-y-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700">
+                <label className="block text-lg font-medium text-gray-700">
                   Shelter Title
                 </label>
                 <input
                   type="text"
                   name="title"
                   placeholder="Room Title"
-                  className="p-3 mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                  className="p-3 mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-[17px]"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700">
+                <label className="block text-lg font-medium text-gray-700">
                   Address
                 </label>
                 <Autocomplete onLoad={onLoad} onPlaceChanged={onPlaceChanged}>
                   <input
                     type="text"
                     placeholder="Enter address"
-                    className="p-3 mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                    className="p-3 mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-[17px]"
                     required
                   />
                 </Autocomplete>
@@ -179,69 +191,69 @@ function AddShelterDrawer({ isOpen, onClose }: AddRoomDialogProps) {
 
               <div className="flex space-x-4">
                 <div className="w-1/2">
-                  <label className="block text-sm font-medium text-gray-700">
+                  <label className="block text-lg font-medium text-gray-700">
                     Floor
                   </label>
                   <input
                     type="text"
                     name="floor"
                     placeholder="Floor"
-                    className="p-3 mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                    className="p-3 mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-[17px]"
                   />
                 </div>
 
                 <div className="w-1/2">
-                  <label className="block text-sm font-medium text-gray-700">
+                  <label className="block text-lg font-medium text-gray-700">
                     Apartment
                   </label>
                   <input
                     type="text"
                     name="apartment"
                     placeholder="Apartment"
-                    className="p-3 mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                    className="p-3 mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-[17px]"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700">
+                <label className="block text-lg font-medium text-gray-700">
                   Image
                 </label>
                 <input
                   type="file"
                   name="image"
                   accept="image/*"
-                  className="p-3 mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                  className="p-3 mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-lg"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700">
+                <label className="block text-lg font-medium text-gray-700">
                   Capacity
                 </label>
                 <input
                   type="number"
                   name="capacity"
                   placeholder="Capacity"
-                  className="p-3 mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                  className="p-3 mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-[17px]"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700">
+                <label className="block text-lg font-medium text-gray-700">
                   Description
                 </label>
                 <textarea
                   name="description"
                   placeholder="Description"
-                  className="p-2 mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                  className="p-2 mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-[17px]"
                   required
                 />
               </div>
 
               <div className="flex items-center space-x-4">
-                <label className="flex items-center text-sm font-medium text-gray-700">
+                <label className="flex items-center text-lg font-medium text-gray-700">
                   Available
                   <input
                     type="checkbox"
@@ -250,7 +262,7 @@ function AddShelterDrawer({ isOpen, onClose }: AddRoomDialogProps) {
                     className="p-1 ml-2 h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                   />
                 </label>
-                <label className="flex items-center text-sm font-medium text-gray-700">
+                <label className="flex items-center text-lg font-medium text-gray-700">
                   Accessible
                   <input
                     type="checkbox"
@@ -259,7 +271,7 @@ function AddShelterDrawer({ isOpen, onClose }: AddRoomDialogProps) {
                     className="p-1 ml-2 h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                   />
                 </label>
-                <label className="flex items-center text-sm font-medium text-gray-700">
+                <label className="flex items-center text-lg font-medium text-gray-700">
                   Public
                   <input
                     type="checkbox"
