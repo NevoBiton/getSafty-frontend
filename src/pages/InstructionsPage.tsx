@@ -43,34 +43,36 @@ const missileInstructions = [
 
 function InstructionsPage() {
   return (
-    <div className="p-6 bg-gray-100 min-h-screen">
-      <h1 className="text-3xl font-bold text-blue-800 mb-6">
-        Pikud HaOref Missile Attack Instructions
-      </h1>
-      <p className="text-lg text-gray-700 mb-4">
-        Follow these guidelines provided by Pikud HaOref (Home Front Command) to
-        ensure your safety during missile attacks.
-      </p>
-      <Accordion type="multiple" className="space-y-4">
-        {missileInstructions.map((instruction, index) => (
-          <AccordionItem
-            key={index}
-            value={instruction.title} // Add a unique value prop here
-            className="border border-gray-300 rounded-lg"
-          >
-            <AccordionTrigger className="bg-orange-500 text-white text-lg font-semibold p-4 rounded-lg hover:bg-orange-600">
-              {instruction.title}
-            </AccordionTrigger>
-            <AccordionContent className="bg-white p-4 rounded-b-lg text-gray-700">
-              <ul className="list-disc list-inside space-y-2">
-                {instruction.content.map((step, stepIndex) => (
-                  <li key={stepIndex}>{step}</li>
-                ))}
-              </ul>
-            </AccordionContent>
-          </AccordionItem>
-        ))}
-      </Accordion>
+    <div className="w-full min-h-screen bg-gradient-to-br from-blue-900 via-blue-600 to-blue-400 text-white flex items-center justify-center p-4">
+      <div className="max-w-4xl w-full bg-white p-8 md:p-10 rounded-xl shadow-2xl border-t-8 border-orange-500 overflow-hidden">
+        <h1 className="text-3xl md:text-4xl font-extrabold text-blue-800 mb-4 md:mb-6 text-center">
+          Pikud HaOref Missile Attack Instructions
+        </h1>
+        <p className="text-base md:text-lg text-gray-700 mb-6 md:mb-8 text-center">
+          Follow these guidelines provided by Pikud HaOref (Home Front Command)
+          to ensure your safety during missile attacks.
+        </p>
+        <Accordion type="multiple" className="space-y-4">
+          {missileInstructions.map((instruction, index) => (
+            <AccordionItem
+              key={index}
+              value={instruction.title}
+              className="border border-gray-300 rounded-lg shadow-lg"
+            >
+              <AccordionTrigger className="bg-gradient-to-r from-orange-300 to-orange-400 text-gray-800 text-base md:text-lg font-semibold p-3 md:p-4 rounded-t-lg hover:from-orange-400 hover:to-orange-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-400 transition">
+                {instruction.title}
+              </AccordionTrigger>
+              <AccordionContent className="bg-gray-50 p-4 md:p-6 rounded-b-lg text-gray-700 leading-relaxed">
+                <ul className="list-disc list-inside space-y-2 md:space-y-3">
+                  {instruction.content.map((step, stepIndex) => (
+                    <li key={stepIndex}>{step}</li>
+                  ))}
+                </ul>
+              </AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
+      </div>
     </div>
   );
 }
