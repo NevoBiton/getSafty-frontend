@@ -97,8 +97,8 @@ function MapPage() {
             lat: position.coords.latitude,
             lng: position.coords.longitude,
           };
-          setLocation(NewcurrentLocation);
-          setCurrentLocaton(NewcurrentLocation);
+
+          // Center the map immediately
           if (map) {
             map.panTo(
               new google.maps.LatLng(
@@ -107,28 +107,33 @@ function MapPage() {
               )
             );
             map.setZoom(15);
-            getShelters(NewcurrentLocation);
           }
           if (inputRef.current) {
             inputRef.current.value = "";
           }
+
+          // Set state and fetch shelters afterward
+          setLocation(NewcurrentLocation);
+          setCurrentLocaton(NewcurrentLocation);
+          getShelters(NewcurrentLocation);
         },
         (error) => {
           console.error("Error obtaining location: ", error);
-          // Fallback to a default location or inform the user
+
+          // Fallback to a default location
           const defaultLocation: Location = { lat: 0, lng: 0 };
-          setLocation(defaultLocation);
           if (map) {
             map.panTo(
               new google.maps.LatLng(defaultLocation.lat, defaultLocation.lng)
             );
             map.setZoom(20);
           }
+          setLocation(defaultLocation);
         },
         {
-          enableHighAccuracy: false,
-          timeout: 10000, // Increase timeout
-          maximumAge: 30000, // Use cached location if available
+          enableHighAccuracy: true, // Request higher accuracy
+          timeout: 5000, // Reduce timeout for quicker fallback
+          maximumAge: 10000, // Use cached location if available
         }
       );
     } else {
