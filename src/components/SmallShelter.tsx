@@ -14,8 +14,6 @@ interface RoomProps {
 }
 
 function SmallShelter({ room }: RoomProps) {
-  console.log(room);
-
   return (
     <Card>
       <CardHeader>
