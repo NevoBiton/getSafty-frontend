@@ -11,10 +11,11 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import RoomsList from "./costum/RoomsList";
-import { LogOut } from "lucide-react";
+import { LogOut, PlusCircle } from "lucide-react";
 import { Separator } from "./ui/separator";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "@/context/AuthContext";
+import AddShelterDrawer from "./costum/AddShelterDrawer";
 
 interface DrawerCompProps {
   openDrawer: boolean;
@@ -23,6 +24,7 @@ interface DrawerCompProps {
 
 function DrawerComp({ openDrawer, setOpenDrawer }: DrawerCompProps) {
   const authContext = useContext(AuthContext);
+  const [addShelterDialogOpen, setAddShelterDialogOpen] = useState(false);
 
   if (!authContext) {
     throw new Error("RegisterPage must be used within an AuthProvider");
@@ -39,8 +41,14 @@ function DrawerComp({ openDrawer, setOpenDrawer }: DrawerCompProps) {
 
           <Accordion type="single" collapsible>
             <AccordionItem value="item-1">
-              <AccordionTrigger className="text-xl">
-                My Shelters
+              <AccordionTrigger className="text-xl relative">
+                <div>My Shelters</div>
+                <button
+                  className="absolute right-8"
+                  onClick={() => setAddShelterDialogOpen(true)}
+                >
+                  <PlusCircle size={20} />
+                </button>
               </AccordionTrigger>
               <AccordionContent>
                 <RoomsList />
@@ -69,6 +77,13 @@ function DrawerComp({ openDrawer, setOpenDrawer }: DrawerCompProps) {
           {/* <Separator /> */}
         </SheetContent>
       </Sheet>
+
+      {addShelterDialogOpen && (
+        <AddShelterDrawer
+          isOpen={addShelterDialogOpen}
+          onClose={() => setAddShelterDialogOpen(false)}
+        />
+      )}
     </>
   );
 }

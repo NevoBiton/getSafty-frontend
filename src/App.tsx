@@ -6,8 +6,8 @@ import RegisterPage from "./pages/RegisterPage";
 import InstructionsPage from "./pages/InstructionsPage";
 import MyProfile from "./pages/MyProfile";
 import MainLayout from "./context/MainLayout";
-import RoomModal from "./components/RoomModal";
 import FavoritesPage from "./pages/FavoritesPage";
+import ShelterDetailsDrawer from "./components/costum/ShelterDetailsDrawer";
 
 function App() {
   return (
@@ -16,7 +16,7 @@ function App() {
         <Route path="/" element={<MainLayout />}>
           <Route index element={<LandingPage />} />
           <Route path="map" element={<MapPage />}>
-            <Route path=":id" element={<RoomModal />} />
+            <Route path=":id" element={<ShelterDetailsDrawer />} />
           </Route>
           <Route path="instructions" element={<InstructionsPage />} />
           <Route path="myProfile" element={<MyProfile />} />

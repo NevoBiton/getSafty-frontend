@@ -6,7 +6,6 @@ import {
   Autocomplete,
 } from "@react-google-maps/api";
 import MyLocationBtn from "../components/MyLocationBtn";
-import AddRoomDialog from "@/components/AddRoomDialog";
 import { AuthContext, IRoom } from "@/context/AuthContext";
 import ColorMap from "@/components/ColorMap";
 import FilterBtn from "@/components/FilterBtn";
@@ -63,7 +62,6 @@ function MapPage() {
   const [shelters, setShelters] = useState<IRoom[]>([]);
   const [selectedRoom, setSelectedRoom] = useState<IRoom | null>(null); // State to manage selected room
   const [roomModalOpen, setRoomModalOpen] = useState(false); // State to manage RoomModal visibility
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams(); // Get and set search params
   const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null); // Ref for the autocomplete input
   const inputRef = useRef<HTMLInputElement | null>(null); // Ref for the search input
@@ -219,11 +217,7 @@ function MapPage() {
   return (
     <div>
       <CountDown location={location} />
-      <button onClick={() => setIsDialogOpen(true)}>TEST</button>
-      <AddRoomDialog
-        isOpen={isDialogOpen}
-        onClose={() => setIsDialogOpen(false)}
-      />
+
       {isLoaded && location ? (
         <GoogleMap
           mapContainerStyle={containerStyle}
@@ -300,11 +294,6 @@ function MapPage() {
           <FilterBtn loc={location} />
           <MyLocationBtn centerMap={centerMap} />
           <ColorMap />
-          <button onClick={() => setIsDialogOpen(true)}>TEST</button>
-          <AddRoomDialog
-            isOpen={isDialogOpen}
-            onClose={() => setIsDialogOpen(false)}
-          />
         </GoogleMap>
       ) : (
         <Loader />
