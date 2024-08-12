@@ -9,7 +9,7 @@ interface Location {
 }
 
 interface FilterBtnProps {
-  loc: Location;
+  loc: Location | null;
 }
 
 function FilterBtn({ loc }: FilterBtnProps) {
@@ -87,9 +87,8 @@ function FilterBtn({ loc }: FilterBtnProps) {
       </div>
 
       <div
-        className={`absolute top-20 left-9 bg-white rounded-lg shadow-lg p-4 transition-all duration-300 transform ${
-          isOpen ? "opacity-100 scale-100" : "opacity-0 scale-95"
-        } ${isOpen ? "pointer-events-auto" : "pointer-events-none"}`}
+        className={`absolute top-20 left-9 bg-white rounded-lg shadow-lg p-4 transition-all duration-300 transform ${isOpen ? "opacity-100 scale-100" : "opacity-0 scale-95"
+          } ${isOpen ? "pointer-events-auto" : "pointer-events-none"}`}
         style={{ width: "300px" }}
       >
         <form onSubmit={handleSubmit}>

@@ -7,6 +7,7 @@ import InstructionsPage from "./pages/InstructionsPage";
 import MyProfile from "./pages/MyProfile";
 import MainLayout from "./context/MainLayout";
 import RoomModal from "./components/RoomModal";
+import FavoritesPage from "./pages/FavoritesPage";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
           </Route>
           <Route path="instructions" element={<InstructionsPage />} />
           <Route path="myProfile" element={<MyProfile />} />
+          <Route path="favourites" element={<FavoritesPage />} />
         </Route>
         <Route path="/" element={<Outlet />}>
           <Route path="login" element={<LoginPage />} />
