@@ -1,13 +1,13 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
-  darkMode: ["class"],
   content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
     "./pages/**/*.{ts,tsx}",
     "./components/**/*.{ts,tsx}",
     "./app/**/*.{ts,tsx}",
-    "./src/**/*.{ts,tsx}",
   ],
+  darkMode: ["class"],
   prefix: "",
   theme: {
     container: {
@@ -18,6 +18,14 @@ export default {
       },
     },
     extend: {
+      screens: {
+        xs: "480px", // Extra small devices
+        sm: "640px", // Small devices
+        md: "768px", // Medium devices
+        lg: "1024px", // Large devices
+        xl: "1280px", // Extra large devices
+        "2xl": "1400px", // Custom 2XL size for your container
+      },
       keyframes: {
         "accordion-down": {
           from: { height: "0" },

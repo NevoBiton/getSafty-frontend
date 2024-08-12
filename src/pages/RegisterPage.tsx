@@ -83,14 +83,14 @@ function RegisterPage() {
         toast({
           title: "Registration successful",
           description: "Please log in to continue.",
-          className: "bg-pink-100 text-black border-none",
+          className: "bg-blue-100 text-black border-none",
           duration: 3000,
         });
       } else {
         setCustomError("Failed to register. Please try again.");
         return;
       }
-      setSuccess("Register successfully. Please log in.");
+      setSuccess("Registered successfully. Please log in.");
       navigate("/login");
     } catch (err: any) {
       if (err.response && err.response.data && err.response.data.error) {
@@ -103,10 +103,10 @@ function RegisterPage() {
   };
 
   return (
-    <div className="relative flex items-center justify-center min-h-screen bg-pink-100 px-[1em]">
+    <div className="relative flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-900 via-blue-600 to-blue-400 text-white px-4 sm:px-6 lg:px-8">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-sm relative z-10 dark:bg-gray-800">
-        <h2 className="text-3xl font-bold mb-6 text-center text-pink-600">
-          Register
+        <h2 className="text-4xl font-bold mb-6 text-center text-blue-600 dark:text-blue-400">
+          Register for GetSafety
         </h2>
         {error && <p className="text-red-500 mb-4">{error}</p>}
         {success && <p className="text-green-500 mb-4">{success}</p>}
@@ -209,14 +209,14 @@ function RegisterPage() {
 
           <button
             type="submit"
-            className="w-full bg-gradient-to-r from-pink-500 to-pink-700 text-white py-2 rounded-full hover:from-pink-600 hover:to-pink-800 transition duration-300 transform hover:scale-105"
+            className="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white py-3 rounded-full hover:from-orange-600 hover:to-orange-700 transition duration-300 transform hover:scale-105"
           >
             Register
           </button>
         </form>
         <p className="mt-4 text-gray-600 dark:text-gray-200">
           Already have an account?{" "}
-          <Link to="/login" className="text-pink-600 hover:underline">
+          <Link to="/login" className="text-orange-600 hover:underline">
             Login here
           </Link>
         </p>

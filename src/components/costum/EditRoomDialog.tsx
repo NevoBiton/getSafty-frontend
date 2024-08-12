@@ -6,15 +6,13 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
-  DrawerTrigger,
 } from "@/components/ui/drawer";
 import { AuthContext, IRoom } from "@/context/AuthContext";
 import api from "@/services/api.services";
 import { useContext, useEffect, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
-import { Checkbox } from "@radix-ui/react-checkbox";
 import { useToast } from "@/components/ui/use-toast";
 import { Button } from "../ui/button";
 
