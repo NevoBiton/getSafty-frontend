@@ -1,7 +1,6 @@
 import { toast } from "@/components/ui/use-toast";
 import { formatJWTTokenToUser } from "@/lib/utils";
 import api from "@/services/api.services";
-import { SwatchBook } from "lucide-react";
 import { createContext, useEffect, useState, ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -53,9 +52,9 @@ export interface AuthContextProps {
   login: (token: string) => Promise<void>;
   logout: () => void;
   userRooms: IRoom[] | null;
-  setUserRooms: any;
+  setUserRooms: React.Dispatch<React.SetStateAction<IRoom[] | null>>;
   favRooms: IRoom[] | null;
-  setFavRooms: any;
+  setFavRooms: React.Dispatch<React.SetStateAction<IRoom[] | null>>;
 }
 
 export const AuthContext = createContext<AuthContextProps | undefined>(
@@ -77,13 +76,14 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     if (token && loggedInUser === null) {
       login(token);
     }
-  }, []);
+  }, [loggedInUser]);
 
   async function fetchRooms(userId: string) {
     try {
       const { data } = await api.get(`/room/user/${userId}`);
-      const { userRooms } = data;
-      setUserRooms(userRooms);
+      console.log(data.userRooms);
+
+      setUserRooms(data.userRooms);
     } catch (error) {
       console.log(error);
     }
@@ -107,8 +107,8 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         favorites: user.favorites,
         createdAt: user.createdAt,
       });
-      fetchRooms(userId);
-      getFavById(userId);
+      fetchRooms(user._id);
+      getFavById(user._id);
       toast({
         title: "Logged in successfully",
         description: `${user.firstName} ${user.lastName}`,
@@ -132,9 +132,10 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     try {
       if (!userId) return;
       const { data } = await api.get(`/room/user/fav/${userId}`);
-      const { favRooms } = data;
+      console.log(userId);
 
-      setFavRooms(favRooms);
+      console.log(data.favRooms);
+      setFavRooms(data.favRooms);
     } catch (err) {
       console.log(err);
     }
