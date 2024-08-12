@@ -3,11 +3,14 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { FaLock, FaEyeSlash, FaEye, FaEnvelope } from "react-icons/fa";
 import { AuthContext, IUserLoginData } from "@/context/AuthContext";
+import { useToast } from "@/components/ui/use-toast";
 import api from "@/services/api.services";
 
 function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
+
+  const { toast } = useToast();
 
   const authContext = useContext(AuthContext);
 
@@ -35,6 +38,12 @@ function LoginPage() {
       login(data.token);
       navigate("/map");
     } catch (error) {
+      toast({
+        title: "Login failed",
+        description: "Invalid email or password. Please try again.",
+        className: "bg-red-500 text-white border-none",
+        duration: 3000,
+      });
       console.log(error);
     }
   };

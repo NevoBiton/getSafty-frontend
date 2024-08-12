@@ -83,7 +83,8 @@ function RegisterPage() {
         toast({
           title: "Registration successful",
           description: "Please log in to continue.",
-          className: "bg-pink-300 text-black border-none",
+          className: "bg-pink-100 text-black border-none",
+          duration: 3000,
         });
       } else {
         setCustomError("Failed to register. Please try again.");
