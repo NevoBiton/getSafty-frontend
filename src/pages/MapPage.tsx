@@ -233,14 +233,6 @@ function MapPage() {
                 />
               </Autocomplete>
             </div>
-            {/* <MarkerF
-              key={1}
-              position={new google.maps.LatLng(location.lat, location.lng)}
-              icon={{
-                url: pinIcons.blue,
-                scaledSize: new google.maps.Size(25, 25),
-              }}
-            /> */}
 
             <MarkerF
               key={1}
