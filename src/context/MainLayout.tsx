@@ -1,12 +1,12 @@
 import { socket } from "@/App";
 import NavBar from "@/components/NavBar";
 import { useToast } from "@/components/ui/use-toast";
+import axios from "axios";
 import { useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
 import { io } from "socket.io-client";
 
 function MainLayout() {
-  const [alert, setAlert] = useState(null);
   const { toast } = useToast();
   useEffect(() => {
     socket.on("alert", (data) => {

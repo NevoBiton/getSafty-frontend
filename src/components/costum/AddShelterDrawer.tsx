@@ -84,8 +84,6 @@ function AddShelterDrawer({
   };
 
   const handleSubmit = async (event: React.FormEvent) => {
-    console.log("start");
-
     event.preventDefault();
 
     const formData = new FormData(formRef.current!);

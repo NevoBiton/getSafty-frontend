@@ -81,7 +81,6 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   async function fetchRooms(userId: string) {
     try {
       const { data } = await api.get(`/room/user/${userId}`);
-      console.log(data.userRooms);
 
       setUserRooms(data.userRooms);
     } catch (error) {
@@ -128,9 +127,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     try {
       if (!userId) return;
       const { data } = await api.get(`/room/user/fav/${userId}`);
-      console.log(userId);
 
-      console.log(data.favRooms);
       setFavRooms(data.favRooms);
     } catch (err) {
       console.log(err);
