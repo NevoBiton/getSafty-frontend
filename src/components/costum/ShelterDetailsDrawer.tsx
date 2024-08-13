@@ -170,6 +170,13 @@ function ShelterDetailsDrawer() {
                     room.capacity || 0
                   } people`}</p>
                 </div>
+                <div className="mt-4">
+                  <h4 className="text-lg font-semibold flex align-middle items-center gap-3">
+                    <FaWheelchair />
+                    Accessibility:{" "}
+                    {room.accessible ? <IoMdCheckmark /> : <FaTimes />}
+                  </h4>
+                </div>
               </div>
 
               <div className="flex justify-between mt-2">

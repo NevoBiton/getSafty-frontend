@@ -14,6 +14,7 @@ import { Outlet, useNavigate, useSearchParams } from "react-router-dom";
 import api from "@/services/api.services";
 import Loader from "@/components/ui/Loader";
 import CountDown from "@/components/CountDown";
+import { GOOGLE_API_KEY } from "@/confige";
 
 interface Location {
   lat: number;
@@ -54,10 +55,9 @@ function MapPage() {
   }, []);
 
   const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: "AIzaSyDwY1nKLe_qB7XyA6_8uBsBkOG_uNdtxgg", // Use environment variable for API key
+    googleMapsApiKey: GOOGLE_API_KEY || "", // Fallback to empty string if not defined
     libraries,
   });
-
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [location, setLocation] = useState<Location | null>(null);
   const [currentLocation, setCurrentLocaton] = useState<Location | null>(null);
@@ -246,7 +246,9 @@ function MapPage() {
               key={1}
               position={new google.maps.LatLng(location.lat, location.lng)}
               icon={{
-                url: "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(`
+                url:
+                  "data:image/svg+xml;charset=UTF-8," +
+                  encodeURIComponent(`
       <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-user">
         <circle cx="12" cy="12" r="10"/>
         <circle cx="12" cy="10" r="3"/>
