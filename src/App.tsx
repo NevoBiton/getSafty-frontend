@@ -9,21 +9,19 @@ import MainLayout from "./context/MainLayout";
 import FavoritesPage from "./pages/FavoritesPage";
 import ShelterDetailsDrawer from "./components/costum/ShelterDetailsDrawer";
 import io from "socket.io-client";
-import axios from "axios";
-import { useEffect } from "react";
 import api from "./services/api.services";
 
-export const socket = io("http://localhost:3000");
+// export const socket = io("http://localhost:3000");
 
-async function activateAlerts() {
-  try {
-    const response = await api.get("/alert");
-    console.log("alerts activated", response);
-  } catch (err) {
-    console.log("error loading real time alerts: ", err);
-  }
-}
-activateAlerts();
+// async function activateAlerts() {
+//   try {
+//     const response = await api.get("/alert");
+//     console.log("alerts activated", response);
+//   } catch (err) {
+//     console.log("error loading real time alerts: ", err);
+//   }
+// }
+// activateAlerts();
 function App() {
   return (
     <>

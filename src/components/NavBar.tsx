@@ -4,6 +4,7 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import { GrMapLocation } from "react-icons/gr";
 import { useNavigate } from "react-router-dom";
 import DrawerComp from "./DrawerComp";
+import pikudHaOrefLogo from "@/images/pikud-haOref-logo.png";
 
 function NavBar() {
   const [openDrawer, setOpenDrawer] = useState(false);
@@ -44,7 +45,7 @@ function NavBar() {
           <button onClick={() => navigate("/instructions")}>
             <img
               className="w-10 h-auto rounded-full"
-              src="../src/images/pikud-haOref-logo.png"
+              src={pikudHaOrefLogo}
               alt="Pikud HaOref Logo"
             />
           </button>

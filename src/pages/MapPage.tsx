@@ -14,7 +14,7 @@ import { Outlet, useNavigate, useSearchParams } from "react-router-dom";
 import api from "@/services/api.services";
 import Loader from "@/components/ui/Loader";
 import CountDown from "@/components/CountDown";
-import { GOOGLE_API_KEY } from "@/confige";
+import { GOOGLE_API_KEY } from "../../confige";
 
 interface Location {
   lat: number;
@@ -34,6 +34,7 @@ const mapOptions = {
   streetViewControl: false,
   mapTypeControl: false,
   clickableIcons: false,
+  gestureHandling: "greedy",
   // styles: darkModeStyle,
 };
 
@@ -73,9 +74,7 @@ function MapPage() {
       if (!loc || !map) return;
       try {
         const queryString = searchParams.toString();
-        const response = await api.get(
-          `http://localhost:3000/api/room?${queryString}`
-        );
+        const response = await api.get(`/room?${queryString}`);
         setShelters(response.data.rooms);
       } catch (err) {
         console.log(err);
@@ -88,54 +87,59 @@ function MapPage() {
       getShelters(location);
     }
   }, [location, map, searchParams, getShelters]);
-  const centerMap = useCallback(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const NewcurrentLocation: Location = {
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-          };
 
-          if (map) {
-            map.panTo(
-              new google.maps.LatLng(
-                NewcurrentLocation.lat,
-                NewcurrentLocation.lng
-              )
-            );
-            map.setZoom(15);
-          }
-          if (inputRef.current) {
-            inputRef.current.value = "";
-          }
+  const centerMap = () => {
+    try {
+      // if (navigator.geolocation) {
+      //   navigator.geolocation.getCurrentPosition(
+      //     (position) => {
+      //       const NewcurrentLocation: Location = {
+      //         lat: position.coords.latitude,
+      //         lng: position.coords.longitude,
+      //       };
 
-          setLocation(NewcurrentLocation);
-          setCurrentLocaton(NewcurrentLocation);
-          getShelters(NewcurrentLocation);
-        },
-        (error) => {
-          console.error("Error obtaining location: ", error);
+      //       if (map) {
+      //         map.panTo(
+      //           new google.maps.LatLng(
+      //             NewcurrentLocation.lat,
+      //             NewcurrentLocation.lng
+      //           )
+      //         );
+      //         map.setZoom(15);
+      //       }
+      //       if (inputRef.current) {
+      //         inputRef.current.value = "";
+      //       }
 
-          const defaultLocation: Location = { lat: 0, lng: 0 };
-          if (map) {
-            map.panTo(
-              new google.maps.LatLng(defaultLocation.lat, defaultLocation.lng)
-            );
-            map.setZoom(20);
-          }
-          setLocation(defaultLocation);
-        },
-        {
-          enableHighAccuracy: true,
-          timeout: 5000,
-          maximumAge: 10000,
-        }
-      );
-    } else {
-      console.log("Geolocation is not supported by this browser.");
+      //       setLocation(NewcurrentLocation);
+      //       setCurrentLocaton(NewcurrentLocation);
+      //       getShelters(NewcurrentLocation);
+      //     },
+      //     (error) => {
+      //       console.error("Error obtaining location: ", error);
+
+      if (map && currentLocation) {
+        map.panTo(
+          new google.maps.LatLng(currentLocation.lat, currentLocation.lng)
+        );
+        map.setZoom(20);
+      }
+    } catch (err) {
+      console.log(err);
     }
-  }, [map, getShelters]);
+
+    // setLocation(currentLocation);
+    // },
+    // {
+    //   enableHighAccuracy: true,
+    //   timeout: 5000,
+    //   maximumAge: 10000,
+    // }
+    // );
+    // } else {
+    //   console.log("Geolocation is not supported by this browser.");
+    // }
+  };
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -195,7 +199,7 @@ function MapPage() {
         map.panTo(new google.maps.LatLng(newLocation.lat, newLocation.lng));
         map.setZoom(15);
 
-        getShelters(newLocation);
+        // getShelters(newLocation);
       }
     }
   };
