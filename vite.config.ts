@@ -9,4 +9,9 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  build: {
+    outDir: "../getSafety-backend/public",
+    emptyOutDir: true,
+    chunkSizeWarningLimit: 1000, // Set the limit to a higher value (in kB)
+  },
 });
