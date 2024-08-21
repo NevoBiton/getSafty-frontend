@@ -10,7 +10,6 @@ import {
   DrawerClose,
   DrawerContent,
   DrawerDescription,
-  DrawerFooter,
   DrawerHeader,
   DrawerTitle,
 } from "@/components/ui/drawer";
@@ -18,7 +17,7 @@ import { IoMdCheckmark } from "react-icons/io";
 import { useNavigate, useParams } from "react-router-dom";
 import api from "@/services/api.services";
 import Loader from "@/components/ui/Loader"; // Adjust the path based on your file structure
-import { AuthContext, IRoom, User } from "@/context/AuthContext"; // Adjust the path based on your file structure
+import { AuthContext, IRoom } from "@/context/AuthContext"; // Adjust the path based on your file structure
 import { FaPhoneFlip } from "react-icons/fa6";
 import { Button } from "../ui/button";
 import { ScrollArea } from "../ui/scroll-area";
@@ -27,7 +26,7 @@ function ShelterDetailsDrawer() {
   const { id } = useParams<{ id: string }>(); // Extract _id from the URL
   const [room, setRoom] = useState<IRoom>();
   const [favState, setFavState] = useState<boolean>(false);
-  const [owner, setOwner] = useState<User | null>(null);
+  // const [owner, setOwner] = useState<User | null>(null);
   const [formatedNumber, setFormatedNumber] = useState<string>("");
   const nav = useNavigate();
   const authContext = useContext(AuthContext);

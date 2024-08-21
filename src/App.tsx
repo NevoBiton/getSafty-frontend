@@ -8,8 +8,8 @@ import MyProfile from "./pages/MyProfile";
 import MainLayout from "./context/MainLayout";
 import FavoritesPage from "./pages/FavoritesPage";
 import ShelterDetailsDrawer from "./components/costum/ShelterDetailsDrawer";
-import io from "socket.io-client";
-import api from "./services/api.services";
+// import io from "socket.io-client";
+// import api from "./services/api.services";
 
 // export const socket = io("http://localhost:3000");
 
