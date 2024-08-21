@@ -3,11 +3,11 @@ import { FaRegBookmark, FaRegUser } from "react-icons/fa";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { GrMapLocation } from "react-icons/gr";
 import { useNavigate } from "react-router-dom";
-import DrawerComp from "./DrawerComp";
 import pikudHaOrefLogo from "@/images/pikud-haOref-logo.png";
+import SideMenu from "./costum/SideMenu";
 
 function NavBar() {
-  const [openDrawer, setOpenDrawer] = useState(false);
+  const [sideMenuIsOpen, setSideMenuIsOpen] = useState(false);
   const navigate = useNavigate();
 
   return (
@@ -15,7 +15,7 @@ function NavBar() {
       <div className="bg-blue-800 flex justify-between items-center p-4 fixed bottom-0 left-0 right-0 z-50 h-[10%]">
         <div className="flex justify-between w-1/3 sm:w-1/4">
           <button
-            onClick={() => setOpenDrawer(!openDrawer)}
+            onClick={() => setSideMenuIsOpen(!sideMenuIsOpen)}
             className="text-white hover:text-gray-300"
           >
             <GiHamburgerMenu size={32} />
@@ -38,7 +38,7 @@ function NavBar() {
         <div className="flex justify-between w-1/3 sm:w-1/4">
           <button
             className="text-white hover:text-gray-300"
-            onClick={() => navigate("favourites")}
+            onClick={() => navigate("/saved-shelters")}
           >
             <FaRegBookmark size={32} />
           </button>
@@ -51,7 +51,10 @@ function NavBar() {
           </button>
         </div>
       </div>
-      <DrawerComp openDrawer={openDrawer} setOpenDrawer={setOpenDrawer} />
+      <SideMenu
+        sideMenuIsOpen={sideMenuIsOpen}
+        setSideMenuIsOpen={setSideMenuIsOpen}
+      />
     </>
   );
 }

@@ -168,7 +168,7 @@
 //                 onClick={handlePhoneClick}
 //               />
 //             </div>
-//             <div className="m-2 text-2xl">
+//             <div className="m-2 text-2xl hover:cursor-pointer">
 //               <FaRegBookmark
 //                 onClick={toggleFav}
 //                 className={favState ? ` text-orange-600` : `text-black`}

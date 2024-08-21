@@ -33,7 +33,7 @@ function App() {
           </Route>
           <Route path="instructions" element={<InstructionsPage />} />
           <Route path="myProfile" element={<MyProfile />} />
-          <Route path="favourites" element={<FavoritesPage />} />
+          <Route path="saved-shelters" element={<FavoritesPage />} />
         </Route>
         <Route path="/" element={<Outlet />}>
           <Route path="login" element={<LoginPage />} />
