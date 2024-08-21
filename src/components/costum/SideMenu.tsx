@@ -10,19 +10,19 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import RoomsList from "./costum/RoomsList";
+import RoomsList from "../costum/RoomsList";
 import { LogOut, PlusCircle } from "lucide-react";
-import { Separator } from "./ui/separator";
+import { Separator } from "../ui/separator";
 import { useContext, useState } from "react";
 import { AuthContext } from "@/context/AuthContext";
-import AddShelterDrawer from "./costum/AddShelterDrawer";
+import AddShelterDrawer from "../costum/AddShelterDrawer";
 
-interface DrawerCompProps {
-  openDrawer: boolean;
-  setOpenDrawer: (openDrawer: boolean) => void;
+interface SideMenuCompProps {
+  sideMenuIsOpen: boolean;
+  setSideMenuIsOpen: (sideMenuIsOpen: boolean) => void;
 }
 
-function DrawerComp({ openDrawer, setOpenDrawer }: DrawerCompProps) {
+function SideMenu({ sideMenuIsOpen, setSideMenuIsOpen }: SideMenuCompProps) {
   const authContext = useContext(AuthContext);
   const [addShelterDialogOpen, setAddShelterDialogOpen] = useState(false);
 
@@ -33,7 +33,7 @@ function DrawerComp({ openDrawer, setOpenDrawer }: DrawerCompProps) {
 
   return (
     <>
-      <Sheet open={openDrawer} onOpenChange={setOpenDrawer}>
+      <Sheet open={sideMenuIsOpen} onOpenChange={setSideMenuIsOpen}>
         <SheetContent
           side={"left"}
           className="bg-gradient-to-br from-blue-100 via-blue-50 to-white text-gray-800 shadow-lg"
@@ -69,7 +69,7 @@ function DrawerComp({ openDrawer, setOpenDrawer }: DrawerCompProps) {
                 className="text-lg w-full flex justify-between font-medium bg-gradient-to-r from-red-300 to-red-400 text-gray-800 py-2 px-3 rounded-md hover:bg-gradient-to-r hover:from-red-400 hover:to-red-500 transition"
                 onClick={() => {
                   logout();
-                  setOpenDrawer(!openDrawer);
+                  setSideMenuIsOpen(!sideMenuIsOpen);
                 }}
               >
                 <span>Log Out</span>
@@ -91,4 +91,4 @@ function DrawerComp({ openDrawer, setOpenDrawer }: DrawerCompProps) {
   );
 }
 
-export default DrawerComp;
+export default SideMenu;

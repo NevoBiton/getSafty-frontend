@@ -1,5 +1,3 @@
-import React from "react";
-
 function Loader() {
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-gray-800 z-40">
@@ -7,7 +5,7 @@ function Loader() {
       <img
         src="https://media.tenor.com/QhRvvwpCdVoAAAAj/rocket.gif"
         alt="Loading..."
-        className="w-96 z-40 h-96 mb-4"
+        className="w-36 z-40 h-auto mb-4"
       />
 
       {/* Progress Bar */}

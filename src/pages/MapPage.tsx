@@ -24,7 +24,7 @@ interface Location {
 const libraries: "places"[] = ["places"];
 const containerStyle = {
   width: "100%",
-  height: "calc(100vh - 0px)",
+  height: "calc(100vh - 60px)",
 };
 
 const mapOptions = {
@@ -35,7 +35,6 @@ const mapOptions = {
   mapTypeControl: false,
   clickableIcons: false,
   gestureHandling: "greedy",
-  // styles: darkModeStyle,
 };
 
 const pinIcons = {
@@ -60,117 +59,59 @@ function MapPage() {
     libraries,
   });
   const [map, setMap] = useState<google.maps.Map | null>(null);
-  const [location, setLocation] = useState<Location | null>(null);
-  const [currentLocation, setCurrentLocaton] = useState<Location | null>(null);
+  const [searchLocation, setSearchLocation] = useState<Location | null>(null);
+  const [userLocation, setUserLocation] = useState<Location | null>(null);
   const [shelters, setShelters] = useState<IRoom[]>([]);
   const [searchParams, setSearchParams] = useSearchParams(); // Get and set search params
   const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null); // Ref for the autocomplete input
   const inputRef = useRef<HTMLInputElement | null>(null); // Ref for the search input
 
-  const nav = useNavigate();
-
-  const getShelters = useCallback(
-    async (loc: Location) => {
-      if (!loc || !map) return;
-      try {
-        const queryString = searchParams.toString();
-        const response = await api.get(`/room?${queryString}`);
-        setShelters(response.data.rooms);
-      } catch (err) {
-        console.log(err);
-      }
-    },
-    [map, searchParams]
-  );
   useEffect(() => {
-    if (location) {
-      getShelters(location);
+    fetchShelters();
+  }, [map, searchParams]);
+
+  useEffect(() => {
+    if (!navigator.geolocation) {
+      console.log("Geolocation is not supported by this browser.");
+      return;
     }
-  }, [location, map, searchParams, getShelters]);
 
-  const centerMap = () => {
+    const watchId = navigator.geolocation.watchPosition(
+      (position) => {
+        setUserLocation({
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        });
+      },
+      (error) => {
+        console.error("Error obtaining location: ", error);
+      },
+      { enableHighAccuracy: true }
+    );
+    return () => {
+      navigator.geolocation.clearWatch(watchId);
+    };
+  }, [map]);
+
+  const fetchShelters = async () => {
     try {
-      // if (navigator.geolocation) {
-      //   navigator.geolocation.getCurrentPosition(
-      //     (position) => {
-      //       const NewcurrentLocation: Location = {
-      //         lat: position.coords.latitude,
-      //         lng: position.coords.longitude,
-      //       };
+      const queryString = searchParams.toString();
+      console.log("query: ", queryString);
 
-      //       if (map) {
-      //         map.panTo(
-      //           new google.maps.LatLng(
-      //             NewcurrentLocation.lat,
-      //             NewcurrentLocation.lng
-      //           )
-      //         );
-      //         map.setZoom(15);
-      //       }
-      //       if (inputRef.current) {
-      //         inputRef.current.value = "";
-      //       }
-
-      //       setLocation(NewcurrentLocation);
-      //       setCurrentLocaton(NewcurrentLocation);
-      //       getShelters(NewcurrentLocation);
-      //     },
-      //     (error) => {
-      //       console.error("Error obtaining location: ", error);
-
-      if (map && currentLocation) {
-        map.panTo(
-          new google.maps.LatLng(currentLocation.lat, currentLocation.lng)
-        );
-        map.setZoom(20);
-      }
+      const { data } = await api.get(`/room?${queryString}`);
+      setShelters(data.rooms);
     } catch (err) {
       console.log(err);
     }
-
-    // setLocation(currentLocation);
-    // },
-    // {
-    //   enableHighAccuracy: true,
-    //   timeout: 5000,
-    //   maximumAge: 10000,
-    // }
-    // );
-    // } else {
-    //   console.log("Geolocation is not supported by this browser.");
-    // }
   };
 
-  useEffect(() => {
-    if (navigator.geolocation) {
-      const watchId = navigator.geolocation.watchPosition(
-        (position) => {
-          const currentLocation: Location = {
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-          };
-          setLocation(currentLocation);
-          if (map) {
-            map.setCenter(
-              new google.maps.LatLng(currentLocation.lat, currentLocation.lng)
-            );
-            map.setZoom(15);
-            getShelters(currentLocation);
-          }
-        },
-        (error) => {
-          console.error("Error obtaining location: ", error);
-        },
-        { enableHighAccuracy: true }
-      );
-
-      return () => {
-        navigator.geolocation.clearWatch(watchId);
-      };
-    } else {
-      console.log("Geolocation is not supported by this browser.");
+  const goToMyLocation = () => {
+    setSearchLocation(null);
+    if (map && userLocation) {
+      map.panTo(new google.maps.LatLng(userLocation.lat, userLocation.lng));
+      map.setZoom(15);
     }
-  }, [map]);
+  };
 
   const getPinColor = useCallback((shelter: IRoom) => {
     if (!shelter.available) {
@@ -188,7 +129,7 @@ function MapPage() {
           lng: place.geometry.location.lng(),
         };
 
-        setLocation(newLocation);
+        setSearchLocation(newLocation);
 
         setSearchParams({
           ...Object.fromEntries(searchParams.entries()),
@@ -198,23 +139,23 @@ function MapPage() {
 
         map.panTo(new google.maps.LatLng(newLocation.lat, newLocation.lng));
         map.setZoom(15);
-
-        // getShelters(newLocation);
       }
     }
   };
 
   return (
     <div className="flex flex-col w-full h-screen">
-      <CountDown location={location} />
+      <CountDown location={searchLocation || userLocation} />
 
-      {isLoaded && location ? (
+      {isLoaded ? (
         <div className="flex-1">
           <GoogleMap
             mapContainerStyle={containerStyle}
             center={
-              location
-                ? new google.maps.LatLng(location.lat, location.lng)
+              searchLocation
+                ? new google.maps.LatLng(searchLocation.lat, searchLocation.lng)
+                : userLocation
+                ? new google.maps.LatLng(userLocation.lat, userLocation.lng)
                 : undefined
             }
             zoom={15}
@@ -237,31 +178,34 @@ function MapPage() {
                 />
               </Autocomplete>
             </div>
-
-            <MarkerF
-              key={1}
-              position={new google.maps.LatLng(location.lat, location.lng)}
-              icon={{
-                url:
-                  "data:image/svg+xml;charset=UTF-8," +
-                  encodeURIComponent(`
+            {userLocation && (
+              <MarkerF
+                key={1}
+                position={
+                  new google.maps.LatLng(userLocation.lat, userLocation.lng)
+                }
+                icon={{
+                  url:
+                    "data:image/svg+xml;charset=UTF-8," +
+                    encodeURIComponent(`
       <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-user">
         <circle cx="12" cy="12" r="10"/>
         <circle cx="12" cy="10" r="3"/>
         <path d="M7 20.662V19a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1.662"/>
       </svg>
     `),
-                scaledSize: new google.maps.Size(25, 25), // Adjust the size as needed
-                labelOrigin: new google.maps.Point(20, -15), // Adjust the label position if needed
-              }}
-              label={{
-                text: "Your Location",
-                color: "#000",
-                fontSize: "14px",
-                fontWeight: "bold",
-                className: "marker-label",
-              }}
-            />
+                  scaledSize: new google.maps.Size(25, 25), // Adjust the size as needed
+                  labelOrigin: new google.maps.Point(20, -15), // Adjust the label position if needed
+                }}
+                label={{
+                  text: "Your Location",
+                  color: "#000",
+                  fontSize: "14px",
+                  fontWeight: "bold",
+                  className: "marker-label",
+                }}
+              />
+            )}
             {shelters.map((shelter: IRoom, index) =>
               shelter.location ? (
                 <MarkerF
@@ -275,13 +219,13 @@ function MapPage() {
                     scaledSize: new google.maps.Size(25, 25),
                   }}
                   onClick={() => {
-                    nav(`/map/${shelter._id}`);
+                    navigate(`/map/${shelter._id}`);
                   }}
                 />
               ) : null
             )}
-            <FilterBtn loc={location} />
-            <MyLocationBtn centerMap={centerMap} />
+            <FilterBtn loc={searchLocation || userLocation} />
+            <MyLocationBtn goToMyLocation={goToMyLocation} />
             <ColorMap />
           </GoogleMap>
         </div>
