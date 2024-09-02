@@ -1,50 +1,50 @@
-# React + TypeScript + Vite
+# Get Safety Web App
+### (React + TypeScript + MongoDB)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+#### Deployed at: [Get Safety](https://get-safety.vercel.app/)
 
-Currently, two official plugins are available:
+**Get Safety** is a full-stack web application designed for finding and managing shelters. Utilizing a mobile-first approach, it is optimized for ease of use on mobile devices. The app is built using React for the frontend, Express.js & Node.js for the backend, and MongoDB as the database.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Technologies Used
 
-## Expanding the ESLint configuration
+- **Frontend**: React
+- **Backend**: Node.js, Express.js
+- **Database**: MongoDB
+- **Mapping**: Google Maps API
+- **Authentication and Authorization**: JWT (JSON Web Tokens)
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Key Features
 
-- Configure the top-level `parserOptions` property like this:
+- **User Registration**: New users can register and log in directly from the landing page. Once registered, the app remembers the user, streamlining future interactions.
+- **Shelter Management**: Logged-in users can add their own shelters and manage them, making them visible to all users.
+- **Real Data Integration**: Includes actual shelter data from "Pikud Haoref" and local government sources in Israel.
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+## Getting Started
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+Ensure you have Node.js, npm, and MongoDB installed to set up the Get Safety app on your local environment.
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+### Installation
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+1. **Clone the repositories:**
+   - For backend:
+     ```bash
+     git clone https://github.com/Oriassia/getSafty-backend.git
+     cd getSafty-backend
+     npm install
+     npm start
+     ```
+   - For frontend:
+     ```bash
+     git clone https://github.com/NevoBiton/getSafty-frontend.git
+     cd getSafty-frontend
+     npm install
+     npm run dev
+     ```
+
+## Contributing
+
+Contributions to the Get Safety project are welcome. To contribute, fork the repository, create a new branch for your modifications, and submit a pull request.
+
+## Deployed Application
+
+Access the live application here: [Get Safety](https://get-safety.vercel.app/)
