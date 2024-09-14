@@ -14,7 +14,6 @@ import { Outlet, useNavigate, useSearchParams } from "react-router-dom";
 import api from "@/services/api.services";
 import Loader from "@/components/ui/Loader";
 import CountDown from "@/components/CountDown";
-import { GOOGLE_API_KEY } from "../../confige";
 
 interface Location {
   lat: number;
@@ -55,7 +54,7 @@ function MapPage() {
   }, []);
 
   const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: GOOGLE_API_KEY || "", // Fallback to empty string if not defined
+    googleMapsApiKey: import.meta.env.VITE_GOOGLE_API_KEY || "", // Fallback to empty string if not defined
     libraries,
   });
   const [map, setMap] = useState<google.maps.Map | null>(null);

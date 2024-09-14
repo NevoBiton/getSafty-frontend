@@ -3,7 +3,6 @@ import { FaRegBookmark, FaRegUser } from "react-icons/fa";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { GrMapLocation } from "react-icons/gr";
 import { useNavigate } from "react-router-dom";
-import pikudHaOrefLogo from "@/images/pikud-haOref-logo.png";
 import SideMenu from "./costum/SideMenu";
 
 function NavBar() {
@@ -45,7 +44,7 @@ function NavBar() {
           <button onClick={() => navigate("/instructions")}>
             <img
               className="w-10 h-auto rounded-full"
-              src={pikudHaOrefLogo}
+              src={"/public/pikud-haOref-logo.png"}
               alt="Pikud HaOref Logo"
             />
           </button>
