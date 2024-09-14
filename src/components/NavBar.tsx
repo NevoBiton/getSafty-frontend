@@ -44,7 +44,7 @@ function NavBar() {
           <button onClick={() => navigate("/instructions")}>
             <img
               className="w-10 h-auto rounded-full"
-              src={"/public/pikud-haOref-logo.png"}
+              src={"../../public/pikud-haOref-logo.png"}
               alt="Pikud HaOref Logo"
             />
           </button>
