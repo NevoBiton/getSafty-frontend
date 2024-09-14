@@ -6,6 +6,7 @@
     "module": "ESNext",
     "skipLibCheck": true,
 
+    //shadcn + tailwind installation
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
@@ -25,5 +26,5 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src", "confige.ts"]
+  "include": ["src"]
 }
